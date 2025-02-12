@@ -1,0 +1,111 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+
+/* src/styles/scrollbar.css */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+/* (Optional) Smooth scrolling behavior */
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+
+:root {
+  --primary-bg: #dc2626;
+  /* Red */
+  --secondary-bg: #ffffff;
+  /* White */
+  --hover-bg: #b91c1c;
+  /* Darker Red */
+  --text-color: #ffffff;
+  /* White Text */
+  --sidebar-active-bg: #991b1b;
+  /* Slightly Darker Red */
+}
+
+.admin-sidebar {
+  background-color: var(--primary-bg);
+  color: var(--text-color);
+}
+
+.admin-sidebar a {
+  transition: all 0.3s ease-in-out;
+}
+
+.admin-sidebar a:hover {
+  background-color: var(--hover-bg);
+}
+
+.admin-sidebar .active {
+  background-color: var(--sidebar-active-bg);
+  padding-left: 1.5rem;
+}
+
+.admin-navbar {
+  background-color: var(--secondary-bg);
+}
+
+.admin-footer {
+  background-color: var(--primary-bg);
+  color: var(--text-color);
+}

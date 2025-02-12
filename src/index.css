@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+
+/* Your custom CSS can follow */
+body {
+  font-family: 'Inter', sans-serif;
+  font-family: 'Inter';
+  font-style: normal;
+}
+
+
+.bg-linear-gradient {
+  background: linear-gradient(180deg, rgba(166, 166, 166, 0.29) 0%, rgba(115, 115, 115, 0.29) 44.5%, rgba(86, 96, 107, 0.29) 67.5%, rgba(57, 76, 98, 0.29) 100%);
+  ;
+}
+.input-linear-gradient{
+  background: linear-gradient(180deg, rgba(166, 166, 166, 0.29) 0%, rgba(115, 115, 115, 0.29) 44.5%, rgba(86, 96, 107, 0.29) 67.5%, rgba(57, 76, 98, 0.29) 100%);
+
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.3s ease-out forwards;
+}
+
+:root {
+  --primary-bg: #dc2626;
+  /* Red */
+  --secondary-bg: #ffffff;
+  /* White */
+  --hover-bg: #b91c1c;
+  /* Darker Red */
+  --text-color: #ffffff;
+  /* White Text */
+  --sidebar-active-bg: #991b1b;
+  /* Slightly Darker Red */
+}
+
+.admin-sidebar {
+  background-color: var(--primary-bg);
+  color: var(--text-color);
+}
+
+.admin-sidebar a {
+  transition: all 0.3s ease-in-out;
+}
+
+.admin-sidebar a:hover {
+  background-color: var(--hover-bg);
+}
+
+.admin-sidebar .active {
+  background-color: var(--sidebar-active-bg);
+  padding-left: 1.5rem;
+}
+
+.admin-navbar {
+  background-color: var(--secondary-bg);
+}
+
+.admin-footer {
+  background-color: var(--primary-bg);
+  color: var(--text-color);
+}
