@@ -42,25 +42,28 @@ const Settings = () => {
           messageType={messageType}
           onClose={() => setMessage(null)}
         />
-        <form onSubmit={handlePasswordChange} className="grid grid-cols-2 gap-4">
-          <InputField
-            label="Current Password"
-            type="password"
-            value={passwordData.currentPassword}
-            onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-          />
-          <InputField
-            label="New Password"
-            type="password"
-            value={passwordData.newPassword}
-            onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-          />
-          <InputField
-            label="Confirm New Password"
-            type="password"
-            value={passwordData.confirmPassword}
-            onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-          />
+        <form onSubmit={handlePasswordChange}>
+          <div className="grid grid-cols-2 gap-4">
+            <InputField
+              label="Current Password"
+              type="password"
+              value={passwordData.currentPassword}
+              onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
+            />
+            <InputField
+              label="New Password"
+              type="password"
+              value={passwordData.newPassword}
+              onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+            />
+            <InputField
+              label="Confirm New Password"
+              type="password"
+              value={passwordData.confirmPassword}
+              onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+            />
+          </div>
+
           <div className="flex justify-end gap-4">
             <button
               type="submit"

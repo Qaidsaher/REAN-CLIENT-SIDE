@@ -147,8 +147,8 @@ export const AuthProvider = ({ children }) => {
         formData.role === "admin"
           ? "/admin/dashboard"
           : formData.role === "innovator"
-          ? "/dashboard-innovator"
-          : "/dashboard-investor"
+            ? "/dashboard-innovator"
+            : "/dashboard-investor"
       );
 
       return { success: true, user: data.user };
@@ -178,8 +178,8 @@ export const AuthProvider = ({ children }) => {
         role === "admin"
           ? "/admin/dashboard"
           : role === "innovator"
-          ? "/dashboard-innovator"
-          : "/dashboard-investor"
+            ? "/dashboard-innovator"
+            : "/dashboard-investor"
       );
 
       return { success: true, user: data.user };
@@ -194,9 +194,9 @@ export const AuthProvider = ({ children }) => {
       const userProfile = await authUser.getUser(token);
       setProfile(userProfile);
     } catch (error) {
-      alert(error)
-      // logout();
       console.error("❌ Error fetching profile:", error.message);
+      logout();
+
     }
   };
 
@@ -207,9 +207,6 @@ export const AuthProvider = ({ children }) => {
     setProfile(null);
     setToken(null);
     setRole(null);
-    localStorage.removeItem("userToken");
-    localStorage.removeItem("userData");
-    localStorage.removeItem("userRole");
     navigate("/login");
   };
 

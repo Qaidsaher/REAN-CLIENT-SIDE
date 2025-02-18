@@ -1,6 +1,10 @@
 import api from "../../utils/api";
 
 const API_URL = "/admin"; // Base API URL for admins
+export const getDashboard = async () => {
+  const response = await api.get(`${API_URL}/dashboard`);
+  return response.data;
+};
 
 // Get all admins
 export const getAdmins = async () => {

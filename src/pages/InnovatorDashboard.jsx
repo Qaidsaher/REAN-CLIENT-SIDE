@@ -9,8 +9,6 @@ import {
   FaFolderOpen,
   FaDollarSign,
   FaClock,
-  FaCheckCircle,
-  FaTimesCircle,
 } from "react-icons/fa";
 import {
   LineChart,
@@ -20,15 +18,9 @@ import {
   Tooltip,
   CartesianGrid,
   ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
 } from "recharts";
 import { motion } from "framer-motion";
-import {
-  getInnovatorStats,
-  handleInvestmentRequest,
-} from "../services/users/innovators";
+import { getInnovatorStats } from "../services/profileServices";
 import UserLayout from "../layouts/UserLayout";
 
 // ✅ Statistics Card Component
@@ -39,7 +31,7 @@ const StatCard = ({ icon, title, value, color }) => (
   >
     <div className={`${color} text-4xl mx-auto mb-2`}>{icon}</div>
     <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
-    <p className="text-3xl font-bold text-gray-700 mt-2">{value}</p>
+    <p className="text-3xl font-bold text-gray-700 mt-2">{typeof value === 'object' ? JSON.stringify(value) : value}</p>
   </motion.div>
 );
 
@@ -55,6 +47,7 @@ const InnovatorDashboard = () => {
     try {
       const data = await getInnovatorStats();
       setStats(data);
+      
     } catch (error) {
       console.error("❌ Error fetching innovator stats:", error);
     } finally {
@@ -71,8 +64,6 @@ const InnovatorDashboard = () => {
     }
   };
 
-  
-
   // ✅ Prevent undefined errors by setting default values
   const {
     notifications = 0,
@@ -83,7 +74,6 @@ const InnovatorDashboard = () => {
     pendingInnovations = [],
     investmentRequests = [],
     investmentTrends = [],
-    innovationStatus = [],
   } = stats || {};
 
   return (
@@ -123,14 +113,14 @@ const InnovatorDashboard = () => {
             />
             <StatCard
               icon={<FaChartLine />}
-              title="Investments"
+              title="Total Funding"
               value={`$${totalFunding}`}
               color="text-yellow-600"
             />
             <StatCard
               icon={<FaHandshake />}
               title="Commitments"
-              value={commitments}
+              value={Array.isArray(commitments) ? commitments.length : commitments}
               color="text-purple-600"
             />
             <StatCard
@@ -192,7 +182,7 @@ const InnovatorDashboard = () => {
           {/* ✅ Investment Requests */}
           <div className="bg-white p-6 mt-6 rounded-lg shadow-md">
             <h3 className="text-2xl font-bold text-gray-800 mb-4">
-              Investment Requests
+              Investment Requests   
             </h3>
             {investmentRequests.length > 0 ? (
               <ul className="divide-y divide-gray-200">
@@ -201,9 +191,9 @@ const InnovatorDashboard = () => {
                     key={request._id}
                     className="py-4 flex justify-between items-center"
                   >
-                    <span className="text-gray-700">
+                    <span className="text-gray-700 text-lg">
                       <strong>
-                        {request.investor.firstName} {request.investor.lastName}
+                        {request.investor?.firstName} {request.investor?.lastName}
                       </strong>{" "}
                       requested ${request.amount}
                     </span>

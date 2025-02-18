@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getInvestors } from "../services/users/investors";
+import { getInvestors } from "../services/websiteService"
 import {
   FaSearch,
   FaBuilding,

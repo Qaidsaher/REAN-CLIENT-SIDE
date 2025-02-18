@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import InputField from "./InputField";
+import TextAreaField from "./TextAreaField";
 
 const Table = ({ data, fields, onCreate, onEdit, onDelete }) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -9,6 +10,37 @@ const Table = ({ data, fields, onCreate, onEdit, onDelete }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
+  // ✅ Enhanced limitString with error handling
+  const limitString = (str) => {
+    try {
+      // Check if the input is a valid string
+      if (typeof str !== "string") {
+        // throw new Error("Invalid input: expected a string");
+        return str;
+      }
+
+      const length = 5;
+      const words = str.split(" ");
+
+      // Return the limited string or full string if it's within the limit
+      return words.length > length
+        ? `${words.slice(0, length).join(" ")}...`
+        : str;
+
+    } catch (error) {
+      console.error("Error in limitString:", error.message);
+      return ""; // Return an empty string or a default value in case of an error
+    }
+  };
+
+  const tableScrollStyle = {
+    overflowX: "auto",
+    whiteSpace: "nowrap",
+    scrollbarWidth: "thin",
+    scrollbarColor: "#888 #f1f1f1",
+    scrollBehavior: "smooth",
+    maxWidth: "100%",
+  };
 
   const handleCreate = () => {
     setFormData({});
@@ -37,73 +69,98 @@ const Table = ({ data, fields, onCreate, onEdit, onDelete }) => {
     setLoading(true);
     setTimeout(() => setLoading(false), 500);
   };
-
+  const checkerType = (field) => {
+    if (field === "phone" || field === "email") {
+      return field;
+    } else if (field === "birthday") {
+      return "date";
+    }
+    else {
+      return "text";
+    }
+  }
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg">
-      <button
-        className="bg-indigo-600 text-white px-5 py-2 rounded-lg shadow-md hover:bg-indigo-700 transition duration-200 flex items-center space-x-2"
-        onClick={handleCreate}
-      >
-        <span className="text-lg">➕</span>
-        <span>Create New</span>
-      </button>
+    <div className="bg-white p-6 rounded-md shadow-md w-full">
+      <div className="flex justify-between">
 
-      <InputField
-        label="Search"
-        value={searchTerm}
-        onChange={handleSearch}
-        placeholder="Search..."
-      />
+
+        <InputField
+          label=""
+          value={searchTerm}
+          onChange={handleSearch}
+          placeholder="Search..."
+        />
+        <button
+          className="bg-indigo-600 text-white px-4 py-1 h-10 rounded-md shadow-md hover:bg-indigo-700 transition duration-200 flex items-center space-x-2"
+          onClick={handleCreate}
+        >
+          <span className="text-lg text-white">
+            <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 4v16m8-8H4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+
+          </span>
+          <span>Create New</span>
+        </button>
+      </div>
+
       {loading && (
         <div className="animate-pulse text-gray-500">Searching...</div>
       )}
+      <div className="w-full whitespace-nowrap">
+        <table className=" border-collapse rounded-md w-full shadow-md p-2">
+          <thead>
+            <tr className="bg-indigo-600 text-white">
+              <th className="py-2 uppercase text-sm">ID</th>
+              {fields.map((field) => (
+                <th key={field} className="p-1 uppercase text-sm text-nowrap">
+                  {field}
+                </th>
+              ))}
+              <th className="p-1 uppercase text-sm">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data
+              .filter((item) =>
+                (item.name || "")
+                  .toLowerCase()
+                  .includes(searchTerm.toLowerCase())
+              )
+              .map((item, index) => (
+                <tr
+                  key={index}
+                  className="text-center transition duration-200 hover:bg-indigo-50 even:bg-gray-100 "
+                >
+                  <td className="p-3 text-gray-700">{index + 1}</td>
+                  {fields.map((field) => (
+                    <td key={field} className="p-1 text-gray-700 text-nowrap">
+                      {limitString(item[field] ?? "")}
+                    </td>
+                  ))}
+                  <td className="p-2 flex justify-center space-x-4">
+                    {/* Edit Button */}
+                    <button
+                      className="px-3 py-0.5 rounded-sm shadow border-1 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 ease-in-out"
+                      onClick={() => handleEdit(item)}
+                    >
+                      Edit
+                    </button>
 
-      <table className="w-full border-collapse rounded-lg overflow-hidden shadow-lg">
-        <thead>
-          <tr className="bg-indigo-600 text-white">
-            <th className="p-3 uppercase text-sm">ID</th>
-            {fields.map((field) => (
-              <th key={field} className="p-3 uppercase text-sm">
-                {field}
-              </th>
-            ))}
-            <th className="p-3 uppercase text-sm">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data
-            .filter((item) =>
-              (item.name || "").toLowerCase().includes(searchTerm.toLowerCase())
-            )
-            .map((item, index) => (
-              <tr
-                key={index}
-                className="text-center transition duration-200 hover:bg-indigo-50 even:bg-gray-100"
-              >
-                <td className="p-3 text-gray-700">{index + 1}</td>
-                {fields.map((field) => (
-                  <td key={field} className="p-3 text-gray-700">
-                    {item[field]}
+                    {/* Delete Button */}
+                    <button
+                      className="px-3 py-0.5 rounded-sm shadow border-1 border-red-600 text-red-600 hover:bg-red-600 hover:text-white transition-all duration-300 ease-in-out"
+                      onClick={() => setDeleteConfirm(item._id)}
+                    >
+                      Delete
+                    </button>
                   </td>
-                ))}
-                <td className="p-2 flex justify-center space-x-4">
-                  <button
-                    className="bg-blue-600 text-white px-3 py-1 rounded-md shadow hover:bg-blue-700 transition duration-200"
-                    onClick={() => handleEdit(item)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="bg-red-600 text-white px-2 py-0 rounded-md shadow hover:bg-red-700 transition duration-200"
-                    onClick={() => setDeleteConfirm(item._id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
 
       {/* ✅ Delete Confirmation Modal */}
       {deleteConfirm && (
@@ -147,7 +204,7 @@ const Table = ({ data, fields, onCreate, onEdit, onDelete }) => {
       {/* ✅ Create/Edit Modal */}
       {modalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-white p-6 rounded-lg w-full max-w-xl transform transition-all scale-100 opacity-100 shadow-xl">
+          <div className="bg-white p-6 rounded-lg w-full max-w-4xl transform transition-all scale-100 opacity-100 shadow-xl">
             <div className="flex justify-between items-center mb-4 border-b pb-2">
               <h2 className="text-lg font-bold text-indigo-700">
                 {isEditing ? "Edit Entry" : "Create New"}
@@ -162,19 +219,37 @@ const Table = ({ data, fields, onCreate, onEdit, onDelete }) => {
 
             <form
               onSubmit={handleSubmit}
-              className="grid grid-cols-1 md:grid-cols-2 gap-4"
+              className="grid grid-cols-1 md:grid-cols-2 gap-2"
             >
-              {fields.map((field) => (
-                <InputField
-                  key={field}
-                  label={field}
-                  value={formData[field] || ""}
-                  onChange={(e) =>
-                    setFormData({ ...formData, [field]: e.target.value })
+              {fields.map((field) => {
+                {
+                  if (field == "bio") {
+                    return <div className="col-span-2">
+                      <TextAreaField
+                        type={checkerType(field)}
+                        key={field}
+                        label={field}
+                        value={formData[field] || ""}
+                        onChange={(e) =>
+                          setFormData({ ...formData, [field]: e.target.value })
+                        }
+                      />
+                    </div>
+                  } else {
+                    return <InputField
+                      type={checkerType(field)}
+                      key={field}
+                      label={field}
+                      value={formData[field] || ""}
+                      onChange={(e) =>
+                        setFormData({ ...formData, [field]: e.target.value })
+                      }
+                    />
                   }
-                />
-              ))}
-              <div className="col-span-1 md:col-span-2 flex justify-end gap-4 mt-4">
+                }
+
+              })}
+              <div className="col-span-1 md:col-span-2 flex justify-end gap-4 mt-2">
                 <button
                   type="button"
                   className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition duration-200"

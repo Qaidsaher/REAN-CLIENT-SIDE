@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import InputField from "../../UI/InputField";
+import InputField from "../UI/InputField";
 
 const Settings = ({ changePassword, deleteAccount }) => {
   const [passwordData, setPasswordData] = useState({

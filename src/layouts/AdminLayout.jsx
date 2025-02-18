@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
+  FaTachometerAlt,
   FaShapes,
   FaComments,
   FaLightbulb,
@@ -69,9 +70,8 @@ const AdminLayout = ({ children, selectedNav }) => {
       {/* Sidebar */}
       <aside
         ref={sidebarRef}
-        className={`fixed inset-y-0 left-0 bg-indigo-700 text-white w-64 shadow-lg transform transition-transform duration-300 ease-in-out ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-64"
-        } md:relative md:translate-x-0 md:w-64`}
+        className={`fixed inset-y-0 left-0 bg-indigo-700 text-white w-64 shadow-lg transform transition-transform duration-300 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-64"
+          } md:relative md:translate-x-0 md:w-64`}
       >
         <div className="flex items-center justify-between h-16 px-6 border-b border-indigo-500">
           <h1 className="text-xl font-semibold">Admin Panel</h1>
@@ -87,6 +87,12 @@ const AdminLayout = ({ children, selectedNav }) => {
         <nav className="mt-4">
           <ul className="space-y-2">
             <SidebarItem
+              to="/admin/index"
+              icon={<FaTachometerAlt />}
+              label="Dashboard"
+              selected={selectedNav === "dashboard"}
+            />
+            <SidebarItem
               to="/admin/categories"
               icon={<FaShapes />}
               label="Categories"
@@ -95,8 +101,8 @@ const AdminLayout = ({ children, selectedNav }) => {
             <SidebarItem
               to="/admin/chatting"
               icon={<FaComments />}
-              label="Chatting"
-              selected={selectedNav === "chatting"}
+              label="Chats"
+              selected={selectedNav === "chats"}
             />
             <SidebarItem
               to="/admin/innovations"
@@ -111,17 +117,18 @@ const AdminLayout = ({ children, selectedNav }) => {
               selected={selectedNav === "innovators"}
             />
             <SidebarItem
-              to="/admin/investments"
-              icon={<FaMoneyBill />}
-              label="Investments"
-              selected={selectedNav === "investments"}
-            />
-            <SidebarItem
               to="/admin/investors"
               icon={<FaUserTie />}
               label="Investors"
               selected={selectedNav === "investors"}
             />
+            <SidebarItem
+              to="/admin/investments"
+              icon={<FaMoneyBill />}
+              label="Investments"
+              selected={selectedNav === "investments"}
+            />
+
             <SidebarItem
               to="/admin/notifications"
               icon={<FaBell />}
@@ -238,9 +245,8 @@ const SidebarItem = ({ to, icon, label, selected }) => {
     <li>
       <Link
         to={to}
-        className={`block px-6 py-3 flex items-center space-x-3 transition duration-300 hover:bg-indigo-600 hover:pl-8 ${
-          selected ? "bg-indigo-800" : ""
-        }`}
+        className={`block px-6 py-3 flex items-center space-x-3 transition duration-300 hover:bg-indigo-600 hover:pl-8 ${selected ? "bg-indigo-800" : ""
+          }`}
       >
         {icon}
         <span>{label}</span>

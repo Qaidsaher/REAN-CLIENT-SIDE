@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getInvestments } from "../services/users/investments";
+import { getInvestments } from "../services/websiteService";
 import { Link } from "react-router-dom";
 import { FaSearch, FaDollarSign, FaUserTie, FaLightbulb } from "react-icons/fa";
 import UserLayout from "../layouts/UserLayout";

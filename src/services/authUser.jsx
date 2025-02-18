@@ -36,8 +36,9 @@ const authUser = {
 
   // Logout User
   logout: () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    localStorage.removeItem("userToken");
+    localStorage.removeItem("userData");
+    localStorage.removeItem("userRole");
   },
 
   // Get Authenticated User

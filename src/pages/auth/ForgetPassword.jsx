@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { sendResetCode } from "@/services/authService"; // ✅ Import service
+import authUser from "@/services/authUser";
 import InputField from "@/components/UI/InputField";
 import Button from "@/components/UI/Button";
 import LoadingSpinner from "@/components/UI/LoadingSpinner";
@@ -8,22 +8,20 @@ import GuestLayout from "../../layouts/GuestLayout";
 
 const ForgetPassword = () => {
   const [email, setEmail] = useState("");
+  const [role, setRole] = useState("");
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Handle Input Change
   const handleChange = (e) => {
     setEmail(e.target.value);
-    setError(""); // Clear error message when typing
+    setError("");
   };
 
-  // Validate Email
   const validateEmail = (email) => {
-    return /\S+@\S+\.\S+/.test(email); // Simple email validation
+    return /\S+@\S+\.\S+/.test(email);
   };
 
-  // Handle Form Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSuccessMessage("");
@@ -37,14 +35,17 @@ const ForgetPassword = () => {
       setError("Please enter a valid email address.");
       return;
     }
+    if (!role) {
+      setError("Please select a role before submitting.");
+      return;
+    }
 
     setLoading(true);
 
-    // Simulate API call for 3 seconds
     setTimeout(async () => {
       try {
-        await sendResetCode(email);
-        setSuccessMessage("A reset code has been sent to your email.");
+        await authUser.forgotPassword(email, role);
+        setSuccessMessage(`A reset code has been sent to your email for role: ${role}.`);
       } catch (error) {
         setError(error.response?.data?.message || "Failed to send reset code.");
       } finally {
@@ -61,7 +62,7 @@ const ForgetPassword = () => {
             Forgot Password
           </h2>
           <p className="text-gray-600 text-center mb-6">
-            Enter your email to receive a reset code.
+            Enter your email and select your role to receive a reset code.
           </p>
 
           {error && <p className="text-red-600 text-center mb-4">{error}</p>}
@@ -79,6 +80,33 @@ const ForgetPassword = () => {
               onChange={handleChange}
               error={error}
             />
+
+            <div className="flex justify-start gap-4 mb-4">
+              <div
+                className={`border-1 px-2 py-0.5 rounded-md cursor-pointer transition-all ${
+                  role === "innovator" ? "border-blue-500 bg-blue-500 text-white" : "border-blue-300"
+                }`}
+                onClick={() => setRole("innovator")}
+              >
+                Innovator
+              </div>
+              <div
+                className={`border-1 px-2 py-0.5 rounded-md cursor-pointer transition-all ${
+                  role === "investor" ? "border-green-500 bg-green-500 text-white" : "border-green-300"
+                }`}
+                onClick={() => setRole("investor")}
+              >
+                Investor
+              </div>
+              <div
+                className={`border-1 px-2 py-0.5 rounded-md cursor-pointer transition-all ${
+                  role === "admin" ? "border-red-500 bg-red-500 text-white" : "border-red-300"
+                }`}
+                onClick={() => setRole("admin")}
+              >
+                Admin
+              </div>
+            </div>
 
             <Button
               type="submit"

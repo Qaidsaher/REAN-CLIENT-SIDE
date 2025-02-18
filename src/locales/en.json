@@ -1,0 +1,74 @@
+{
+    "home": "Home",
+    "innovate": "Innovate",
+    "about1": "About Us",
+    "contact": "Contact",
+    "login": "Login",
+    "join": "Join",
+    "switchLanguage": "Switch to Arabic",
+    "welcomeBack": "Welcome Back!",
+    "loginPrompt": "Please enter your credentials to log in.",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "selectRole": "Select Role",
+    "roleInnovator": "Innovator",
+    "roleInvestor": "Investor",
+    "roleAdmin": "Admin",
+    "rememberMe": "Remember Me",
+    "loginButton": "Login",
+    "loggingIn": "Logging in... Please wait.",
+    "forgotPassword": "Forgot Password?",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up here",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password is required",
+    "loginFailed": "Login failed. Please try again.",
+    "about": {
+        "title": "REAN: Where {{ideas}} & {{investments}} Converge",
+        "ideas": "Ideas",
+        "investments": "Investments",
+        "description": "Welcome to REAN, an innovative platform designed to connect visionaries and investors. We offer a seamless experience where groundbreaking ideas meet strategic funding to transform industries.",
+        "exploreButton": "Explore Innovations",
+        "joinButton": "Join REAN",
+        "imageAlt": "REAN Innovation"
+    },
+    "hero": {
+        "title": "Built to Scale",
+        "subtitle": "All Private Funds",
+        "description": "We provide an integrated environment for exchanging ideas and investing in promising projects. Join us today and shape the future of innovation and business.",
+        "joinButton": "Join Now",
+        "learnMoreButton": "Learn More",
+        "imageAlt": "Innovation"
+    },
+    "footer": {
+        "legalTitle": "Legal",
+        "terms": "Terms & Conditions",
+        "conflictPolicy": "Conflict of Interest Policy",
+        "defaultRates": "Issuance Default Rates",
+        "followUs": "Follow Us",
+        "companyTitle": "Company",
+        "rights": "All rights reserved © {{year}}",
+        "bottomText": "© {{year}} REAN. All rights reserved."
+    },
+    "areas": {
+        "sectionTitle": "Our Focus Areas",
+        "technology": {
+            "title": "Technology",
+            "description": "Technology drives progress and helps solve complex problems. From AI to mobile apps, it's transforming industries worldwide."
+        },
+        "medicine": {
+            "title": "Medicine",
+            "description": "Medicine advances healthcare, improves quality of life, and provides innovative treatments for various diseases and conditions."
+        },
+        "agriculture": {
+            "title": "Agriculture",
+            "description": "Agriculture is the backbone of food production, ensuring sustainability through innovative farming and resource management."
+        },
+        "business": {
+            "title": "Business",
+            "description": "Business strategies shape industries, drive economies, and create opportunities for global innovation and entrepreneurship."
+        }
+    }
+}

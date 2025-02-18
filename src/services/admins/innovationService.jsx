@@ -16,7 +16,11 @@ export const getInnovationById = async (id) => {
 
 // Create a new innovation (Admin only)
 export const createInnovation = async (innovation) => {
-  const response = await api.post(`${API_URL}/create`, innovation);
+  const headers = {
+    "Content-Type": "multipart/form-data", // Required for image/video uploads
+  };
+
+  const response = await api.post(`${API_URL}/create`, innovation, { headers });
   return response.data;
 };
 

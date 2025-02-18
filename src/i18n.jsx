@@ -1,29 +1,12 @@
 // src/i18n.js
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-
+import en from './locales/en.json';
+import ar from './locales/ar.json';
 // Translation resources for English and Arabic
 const resources = {
-  en: {
-    translation: {
-      "Home": "Home",
-      "innovate": "innovate",
-      "About Us": "About Us",
-      "Login": "Login",
-      "Join": "Join",
-      // ...other keys
-    },
-  },
-  ar: {
-    translation: {
-      "Home": "الرئيسية",
-      "innovate": "ابتكر",
-      "About Us": "من نحن",
-      "Login": "تسجيل الدخول",
-      "Join": "انضم",
-      // ...other keys
-    },
-  },
+  en: { translation: en },
+  ar: { translation: ar }
 };
 
 i18n

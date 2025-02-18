@@ -1,6 +1,8 @@
+
+// export default InvestorProfile;
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { getInvestorById } from "../services/users/investors";
+import { getInvestorById } from "../services/websiteService";
 import {
   FaEnvelope,
   FaBuilding,
@@ -28,7 +30,6 @@ const InvestorProfile = () => {
   const fetchInvestor = async () => {
     try {
       const data = await getInvestorById(id);
-      console.log("Fetched Investor Data:", data); // Debugging
       setInvestor(data.investor);
       setInvestments(data.investments);
     } catch (error) {
@@ -50,8 +51,7 @@ const InvestorProfile = () => {
     <UserLayout selectedPage={"investors"}>
       <div className="max-w-7xl mx-auto p-6">
         {/* Profile Section */}
-        <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col md:flex-row items-center gap-6">
-          {/* Profile Image */}
+        <div className="bg-gradient-to-r from-indigo-500 to-blue-600 text-white shadow-lg rounded-lg p-6 flex flex-col md:flex-row items-center gap-6">
           <div className="relative">
             <img
               src={
@@ -60,58 +60,47 @@ const InvestorProfile = () => {
                   : "https://via.placeholder.com/150"
               }
               alt={investor.firstName}
-              className="w-40 h-40 rounded-full object-cover border-4 border-indigo-600 shadow-md"
+              className="w-40 h-40 rounded-full object-cover border-4 border-white shadow-md"
             />
           </div>
 
-          {/* Profile Info */}
           <div className="text-center md:text-left flex flex-col gap-2">
-            <h2 className="text-4xl font-bold text-gray-900 flex items-center gap-2">
-              <FaUserTie className="text-indigo-600" /> {investor.firstName}{" "}
-              {investor.lastName}
+            <h2 className="text-4xl font-bold flex items-center gap-2">
+              <FaUserTie /> {investor.firstName} {investor.lastName}
             </h2>
-            <p className="text-lg text-gray-600 flex items-center gap-2">
-              <FaEnvelope className="text-gray-500" /> {investor.email}
+            <p className="text-lg flex items-center gap-2">
+              <FaEnvelope /> {investor.email}
             </p>
-            <p className="text-lg text-gray-700 flex items-center gap-2">
-              <FaCity className="text-blue-600" />{" "}
-              {investor.city || "No city provided"}
+            <p className="text-lg flex items-center gap-2">
+              <FaCity /> {investor.city || "No city provided"}
             </p>
-
-            {/* Investor Badge */}
-            <span className="mt-2 inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-600 border border-green-400 shadow-md">
-              <FaDollarSign size={18} />
-              Investor
+            <span className="mt-2 inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold bg-green-200 text-green-800 shadow-md">
+              <FaDollarSign size={18} /> Investor
             </span>
           </div>
         </div>
 
         {/* Bio Section */}
         {investor.bio && (
-          <div className="mt-6 bg-gray-100 p-6 rounded-lg shadow-md">
+          <div className="mt-6 bg-white p-6 rounded-lg shadow-md">
             <h3 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-              <MdOutlineDescription className="text-indigo-600" /> About{" "}
-              {investor.firstName}
+              <MdOutlineDescription className="text-indigo-600" /> About {investor.firstName}
             </h3>
             <p className="text-gray-700 mt-2 leading-relaxed">{investor.bio}</p>
           </div>
         )}
 
-        {/* Additional Information Section */}
+        {/* Additional Information */}
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Education */}
-          <div className="bg-white p-6 rounded-lg shadow-md flex items-center gap-3">
+          <div className="bg-white p-6 rounded-lg shadow-md flex items-center gap-3 hover:shadow-xl transition">
             <FaGraduationCap className="text-green-600 text-3xl" />
             <div>
               <h4 className="text-lg font-semibold text-gray-900">Education</h4>
-              <p className="text-gray-700">
-                {investor.education || "Not specified"}
-              </p>
+              <p className="text-gray-700">{investor.education || "Not specified"}</p>
             </div>
           </div>
 
-          {/* Birthday */}
-          <div className="bg-white p-6 rounded-lg shadow-md flex items-center gap-3">
+          <div className="bg-white p-6 rounded-lg shadow-md flex items-center gap-3 hover:shadow-xl transition">
             <FaBirthdayCake className="text-yellow-600 text-3xl" />
             <div>
               <h4 className="text-lg font-semibold text-gray-900">Birthday</h4>
@@ -123,16 +112,11 @@ const InvestorProfile = () => {
             </div>
           </div>
 
-          {/* Phone Number */}
-          <div className="bg-white p-6 rounded-lg shadow-md flex items-center gap-3">
+          <div className="bg-white p-6 rounded-lg shadow-md flex items-center gap-3 hover:shadow-xl transition">
             <FaPhoneAlt className="text-indigo-600 text-3xl" />
             <div>
-              <h4 className="text-lg font-semibold text-gray-900">
-                Phone Number
-              </h4>
-              <p className="text-gray-700">
-                {investor.phone || "Not specified"}
-              </p>
+              <h4 className="text-lg font-semibold text-gray-900">Phone Number</h4>
+              <p className="text-gray-700">{investor.phone || "Not specified"}</p>
             </div>
           </div>
         </div>
@@ -140,8 +124,7 @@ const InvestorProfile = () => {
         {/* Investments Section */}
         <div className="mt-8">
           <h3 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-            <FaDollarSign className="text-green-500" /> Investments by{" "}
-            {investor.firstName}
+            <FaDollarSign className="text-green-500" /> Investments by {investor.firstName}
           </h3>
 
           {investments.length > 0 ? (
@@ -149,10 +132,10 @@ const InvestorProfile = () => {
               {investments.map((investment) => (
                 <div
                   key={investment._id}
-                  className="bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition"
+                  className="bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition border-t-4 border-indigo-500"
                 >
                   <h3 className="text-xl font-semibold text-gray-900">
-                    {investment.innovation.name}
+                    {investment.innovation?.name || "Unnamed Innovation"}
                   </h3>
                   <p className="text-gray-600 mt-1">
                     <span className="font-semibold">Amount Invested:</span> $
@@ -160,10 +143,15 @@ const InvestorProfile = () => {
                   </p>
                   <p className="text-gray-700 mt-2">
                     <span className="font-semibold">Date:</span>{" "}
-                    {new Date(investment.date).toLocaleDateString()}
+                    {investment.createdAt
+                      ? new Date(investment.createdAt).toLocaleDateString()
+                      : "Unknown"}
+                  </p>
+                  <p className="text-gray-600 mt-2">
+                    <span className="font-semibold">Status:</span> {investment.status}
                   </p>
                   <Link
-                    to={`/innovations/${investment.innovation._id}`}
+                    to={`/innovations/${investment.innovation?._id}`}
                     className="mt-4 inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition"
                   >
                     <FaLightbulb />
@@ -177,7 +165,7 @@ const InvestorProfile = () => {
           )}
         </div>
 
-        {/* Chat with Investor Button */}
+        {/* Chat Button */}
         <div className="fixed bottom-6 right-6">
           <Link
             to={`/chat/${investor._id}`}

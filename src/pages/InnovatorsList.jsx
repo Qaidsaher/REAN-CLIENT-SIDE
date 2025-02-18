@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getInnovators } from "../services/users/innovators";
+import { getInnovators } from "../services/websiteService";
 import { Link } from "react-router-dom";
 import { FaSearch, FaUser, FaFilter } from "react-icons/fa";
 import UserLayout from "../layouts/UserLayout";

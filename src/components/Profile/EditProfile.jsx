@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import InputField from "../../UI/InputField";
+import InputField from "../UI/InputField";
 import { FaCamera, FaUserEdit } from "react-icons/fa";
 const EditProfile = ({ profile, updateProfile }) => {
   const [formData, setFormData] = useState(profile || {});

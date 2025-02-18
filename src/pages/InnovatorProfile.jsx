@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import {
   getInnovatorById,
   getInnovationsByInnovator,
-} from "../services/users/innovators";
+} from "../services/websiteService";
 import {
   FaEnvelope,
   FaLightbulb,

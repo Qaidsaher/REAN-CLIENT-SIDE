@@ -37,10 +37,11 @@ import CommunityGuidelines from "../pages/CommunityGuidelines";
 import SecurityCompliance from "../pages/SecurityCompliance";
 import JoinBy from "../pages/auth/JoinBy";
 import Commitment from "../pages/Commitment";
-import Dashboard from "../pages/admins/Dashboard";
 import Index from "../pages/admins/Index";
 import Category from "../pages/admins/Category";
 import AdminRoutes from "./AdminRoutes";
+import MyActivity from "../pages/MyActivity";
+import AboutUs from "../pages/AboutUs";
 const UserRoutes = () => {
   return (
     <Routes>
@@ -53,6 +54,7 @@ const UserRoutes = () => {
       <Route path="/change-password" element={<ChangePassword />} />
       <Route path="/join-by" element={<JoinBy />} />
       <Route path="/help" element={<Help />} />
+      <Route path="/about-us" element={<AboutUs />} />
       <Route path="/investor-guide" element={<InvestorGuide />} />
       <Route path="/innovation-guide" element={<InnovationGuide />} />
       <Route path="/privacy-policy" element={<PrivacyPolicy />} />
@@ -79,6 +81,7 @@ const UserRoutes = () => {
       >
         {/* ✅ Add your common page */}
         <Route path="/chat" element={<Chats />} />{" "}
+        <Route path="/my-activity" element={<MyActivity />} />{" "}
         <Route path="/profile" element={<Profile />} />{" "}
         <Route path="/innovations" element={<InnovationsList />} />
         <Route path="/innovations/:id" element={<InnovationDetail />} />
@@ -89,10 +92,8 @@ const UserRoutes = () => {
         <Route path="/investments" element={<InvestmentsList />} />
         <Route path="/investments/:id" element={<InvestmentDetail />} />
       </Route>
-      {/* <Route element={<PrivateRoute allowedRoles={["admin"]} />}>
        
-        
-      </Route> */}
+      
 
       {/* Unauthorized Access Page */}
       <Route path="/unauthorized" element={<UnauthorizedPage />} />

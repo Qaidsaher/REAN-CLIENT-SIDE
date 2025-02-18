@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getInvestmentById } from "../services/users/investments";
+import { getInvestmentById } from "../services/websiteService";
 import {
   FaUserTie,
   FaLightbulb,

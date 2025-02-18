@@ -31,6 +31,7 @@ const ProfileView = ({ profile, role, stats }) => {
             alt="Profile"
             className="w-28 h-28 rounded-full object-cover border-4 border-indigo-600 shadow-lg transition-all duration-300 hover:scale-105"
           />
+        
         </div>
 
         {/* Profile Info with User Type Badge */}
@@ -102,10 +103,9 @@ const ProfileView = ({ profile, role, stats }) => {
       </div>
 
       {/* ✅ Statistics Cards */}
-      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+      {/* <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
         {stats && (
           <>
-            {/* Notifications Card */}
             <div className="border border-indigo-300 bg-indigo-100 rounded-lg p-6 text-center shadow-md hover:shadow-lg transition-all">
               <FaBell size={30} className="text-indigo-600 mx-auto mb-2" />
               <h3 className="text-xl font-semibold text-gray-800">
@@ -116,7 +116,6 @@ const ProfileView = ({ profile, role, stats }) => {
               </p>
             </div>
 
-            {/* Messages Card */}
             <div className="border border-blue-300 bg-blue-100 rounded-lg p-6 text-center shadow-md hover:shadow-lg transition-all">
               <FaComments size={30} className="text-blue-600 mx-auto mb-2" />
               <h3 className="text-xl font-semibold text-gray-800">Chats</h3>
@@ -125,7 +124,6 @@ const ProfileView = ({ profile, role, stats }) => {
               </p>
             </div>
 
-            {/* Innovations Card */}
             <div className="border border-green-300 bg-green-100 rounded-lg p-6 text-center shadow-md hover:shadow-lg transition-all">
               <FaLightbulb size={30} className="text-green-600 mx-auto mb-2" />
               <h3 className="text-xl font-semibold text-gray-800">
@@ -136,7 +134,6 @@ const ProfileView = ({ profile, role, stats }) => {
               </p>
             </div>
 
-            {/* Investments Card */}
             <div className="border border-yellow-300 bg-yellow-100 rounded-lg p-6 text-center shadow-md hover:shadow-lg transition-all">
               <FaChartLine size={30} className="text-yellow-600 mx-auto mb-2" />
               <h3 className="text-xl font-semibold text-gray-800">
@@ -147,7 +144,6 @@ const ProfileView = ({ profile, role, stats }) => {
               </p>
             </div>
 
-            {/* Commitments Card */}
             <div className="border border-purple-300 bg-purple-100 rounded-lg p-6 text-center shadow-md hover:shadow-lg transition-all">
               <FaHandshake size={30} className="text-purple-600 mx-auto mb-2" />
               <h3 className="text-xl font-semibold text-gray-800">
@@ -158,7 +154,6 @@ const ProfileView = ({ profile, role, stats }) => {
               </p>
             </div>
 
-            {/* Investors Chatting with User */}
             <div className="border border-red-300 bg-red-100 rounded-lg p-6 text-center shadow-md hover:shadow-lg transition-all">
               <FaUsers size={30} className="text-red-600 mx-auto mb-2" />
               <h3 className="text-xl font-semibold text-gray-800">
@@ -170,7 +165,7 @@ const ProfileView = ({ profile, role, stats }) => {
             </div>
           </>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -71,6 +71,11 @@ export const getInnovators = async () => {
   return response.data;
 };
 
+export const getNotifications = async () => {
+  const response = await API.get(`${API_URL}/notifications`);
+  return response.data;
+};
+
 // ✅ Edit Profile (for both Innovators and Investors)
 export const editProfile = async (profileData) => {
   const formData = new FormData();

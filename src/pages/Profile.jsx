@@ -1,19 +1,19 @@
+
 import React, { useEffect, useState } from "react";
-import Navbar from "../components/Innovator/Navbar";
-import ProfileView from "../components/Innovator/Profile/ProfileView";
-import EditProfile from "../components/Innovator/Profile/EditProfile";
-import Settings from "../components/Innovator/Profile/Settings";
-import Notifications from "../components/Innovator/Profile/Notifications";
-import Footer from "../components/Innovator/Footer";
+import ProfileView from "../components/Profile/ProfileView";
+import EditProfile from "../components/Profile/EditProfile";
+import Settings from "../components/Profile/Settings";
+import Notifications from "../components/Profile/Notifications";
 import { useAuth } from "../contexts/AuthContext";
 import { FaUser, FaEdit, FaCog, FaBell } from "react-icons/fa";
 
 import {
   getProfile,
+  getNotifications,
   editProfile,
   changePassword,
   deleteAccount,
-} from "../services/users/chatServices"; // API services
+} from "../services/profileServices"; // API services
 import UserLayout from "../layouts/UserLayout";
 
 const Profile = () => {
@@ -30,29 +30,7 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      type: "message",
-      title: "New Message",
-      description: "You received a message from John.",
-      date: "2025-02-10",
-    },
-    {
-      id: 2,
-      type: "success",
-      title: "Profile Updated",
-      description: "Your profile was updated successfully.",
-      date: "2025-02-09",
-    },
-    {
-      id: 3,
-      type: "alert",
-      title: "Security Alert",
-      description: "New sign-in detected from an unknown device.",
-      date: "2025-02-08",
-    },
-  ]);
+  const [notifications, setNotifications] = useState([]);
 
   // ✅ Fetch Profile Data
   useEffect(() => {
@@ -69,8 +47,70 @@ const Profile = () => {
     fetchUserProfile();
   }, []);
 
+  // ✅ Fetch Notifications Data for the logged in user
+  useEffect(() => {
+    const fetchUserNotifications = async () => {
+      try {
+        const data = await getNotifications();
+        if (data) {
+          setNotifications(data);
+        } else {
+          // console.error("Error fetching notifications:", .error);
+        }
+      } catch (error) {
+        console.error("❌ Error fetching notifications:", error);
+      }
+    };
+    if (user) {
+      fetchUserNotifications();
+    }
+  }, [user]);
+
   const handleDeleteNotification = (id) => {
     setNotifications((prev) => prev.filter((note) => note.id !== id));
+  };
+
+  const handleEditProfile = async (updatedProfile) => {
+    try {
+      const response = await editProfile(updatedProfile);
+      if (response.success) {
+        setProfile(response.data);
+        alert("Profile updated successfully.");
+      } else {
+        alert("Failed to update profile.");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  };
+
+  const handleChangePassword = async (oldPassword, newPassword) => {
+    try {
+      const response = await changePassword({ oldPassword, newPassword });
+      if (response.success) {
+        alert("Password changed successfully.");
+      } else {
+        alert("Failed to change password.");
+      }
+    } catch (error) {
+      console.error("Error changing password:", error);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (window.confirm("Are you sure you want to delete your account?")) {
+      try {
+        const response = await deleteAccount();
+        if (response.success) {
+          alert("Account deleted successfully.");
+          window.location.href = "/login";
+        } else {
+          alert("Failed to delete account.");
+        }
+      } catch (error) {
+        console.error("Error deleting account:", error);
+      }
+    }
   };
 
   const renderContent = () => {
@@ -78,18 +118,16 @@ const Profile = () => {
       return <p className="text-center text-gray-500">Loading profile...</p>;
     }
     if (!profile) {
-      return (
-        <p className="text-center text-red-500">Failed to load profile.</p>
-      );
+      return <p className="text-center text-red-500">Failed to load profile.</p>;
     }
 
     switch (activeTab) {
       case "overview":
         return <ProfileView profile={profile} role={role} stats={stats} />;
       case "edit":
-        return <EditProfile profile={profile} updateProfile={() => {}} />;
+        return <EditProfile profile={profile} updateProfile={handleEditProfile} />;
       case "settings":
-        return <Settings changePassword={() => {}} deleteAccount={() => {}} />;
+        return <Settings changePassword={handleChangePassword} deleteAccount={handleDeleteAccount} />;
       case "notifications":
         return (
           <Notifications
@@ -103,32 +141,16 @@ const Profile = () => {
   };
 
   return (
-    <UserLayout  selectedPage="profile">
-      <div className="flex flex-col md:flex-row gap-8 min-h-[90vh] bg-red-40">
+    <UserLayout selectedPage="profile">
+      <div className="flex flex-col md:flex-row gap-8 min-h-[90vh]">
         {/* ✅ Sidebar Navigation */}
         <nav className="w-full md:w-1/4 bg-white shadow-md rounded-md p-6 md:min-h-[90vh]">
           <ul className="space-y-3">
             {[
-              {
-                label: "Overview",
-                icon: <FaUser size={18} />,
-                key: "overview",
-              },
-              {
-                label: "Edit Profile",
-                icon: <FaEdit size={18} />,
-                key: "edit",
-              },
-              {
-                label: "Settings",
-                icon: <FaCog size={18} />,
-                key: "settings",
-              },
-              {
-                label: "Notifications",
-                icon: <FaBell size={18} />,
-                key: "notifications",
-              },
+              { label: "Overview", icon: <FaUser size={18} />, key: "overview" },
+              { label: "Edit Profile", icon: <FaEdit size={18} />, key: "edit" },
+              { label: "Settings", icon: <FaCog size={18} />, key: "settings" },
+              { label: "Notifications", icon: <FaBell size={18} />, key: "notifications" },
             ].map((item) => (
               <li key={item.key}>
                 <button
@@ -148,7 +170,7 @@ const Profile = () => {
         </nav>
 
         {/* ✅ Main Content Area */}
-        <main className="w-full md:w-3/4 bg-white shadow-md rounded-md p-6 md:min-h-[90vh]">
+        <main className="w-full md:w-3/4 bg-white shadow-md rounded-md p-6">
           {renderContent()}
         </main>
       </div>

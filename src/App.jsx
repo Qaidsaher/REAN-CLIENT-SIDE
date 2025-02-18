@@ -6,11 +6,9 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import LandingPage from "./pages/LandingPage";
 import UserRoutes from "./routes/UserRoutes";
 import AdminRoutes from "./routes/AdminRoutes";
-import { GoogleOAuthProvider } from "@react-oauth/google"; // ✅ Import Google Provider
-
 function App() {
   return (
-     
+    
       <Router>
         <ThemeProvider>
           <AuthProvider>
@@ -22,7 +20,8 @@ function App() {
           </AuthProvider>
         </ThemeProvider>
       </Router>
-    
+      
+   
   );
 }
 
