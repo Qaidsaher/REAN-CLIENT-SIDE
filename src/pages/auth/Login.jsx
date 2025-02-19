@@ -8,18 +8,16 @@ import { Link } from "react-router-dom";
 import LoadingSpinner from "@/components/UI/LoadingSpinner";
 import GuestLayout from "../../layouts/GuestLayout";
 import GoogleLoginButton from "./GoogleLoginButton";
-import axios from "axios";
-import TwitterLoginButton from "./TwitterLoginButton";
 import { useTranslation } from "react-i18next";
 
 const Login = () => {
   const { t } = useTranslation();
-  const { login, token, role } = useAuth();
+  const { login, token, role ,googleLogin} = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    role: "innovator",
+    role: "innovator", // ✅ Set default role as 'innovator'
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -58,32 +56,30 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle Form Submit (Waits 5 seconds before logging in)
+  // Handle Form Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
     setErrors({});
 
-    setTimeout(async () => {
-      try {
-        await login(formData.email, formData.password, formData.role);
-        if (rememberMe) {
-          localStorage.setItem("rememberMe", JSON.stringify(formData));
-        } else {
-          localStorage.removeItem("rememberMe");
-        }
-      } catch (error) {
-        console.error("❌ Login Error:", error);
-        setErrors({
-          general:
-            error.response?.data?.message ||
-            t("loginFailed"),
-        });
-      } finally {
-        setLoading(false);
+    try {
+      await login(formData.email, formData.password, formData.role);
+      if (rememberMe) {
+        localStorage.setItem("rememberMe", JSON.stringify(formData));
+      } else {
+        localStorage.removeItem("rememberMe");
       }
-    }, 5000);
+    } catch (error) {
+      console.error("❌ Login Error:", error);
+      setErrors({
+        general:
+          error.response?.data?.message ||
+          t("loginFailed"),
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   // ✅ Role Button Colors
@@ -92,24 +88,24 @@ const Login = () => {
     investor: "bg-green-600 text-white border-green-600",
     admin: "bg-red-600 text-white border-red-600",
   };
+
+  // ✅ Handle Google Sign-In
   const handleGoogleSignIn = async (token) => {
     try {
-      const response = await axios.post("http://localhost:5000/auth/google", {
-        token,
-      });
-      alert(JSON.stringify(response.data.user))
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      await googleLogin(token,formData.role)
+     
+      alert("kdlkl");
+      // localStorage.setItem("user", JSON.stringify(response.data.user));
     } catch (error) {
       console.error("Google Sign-in Error:", error.response?.data || error);
+      setErrors({ general: t("googleLoginFailed") });
     }
   };
+
   return (
     <GuestLayout>
       <div className="flex items-center justify-center min-h-screen bg-gray-100 w-full">
-        <Card
-          title={t("welcomeBack")}
-          description={t("loginPrompt")}
-        >
+        <Card title={t("welcomeBack")} description={t("loginPrompt")}>
           {errors.general && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md text-center mb-3">
               {errors.general}
@@ -166,10 +162,7 @@ const Login = () => {
                 onChange={handleRememberMe}
                 className="mx-2 w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
               />
-              <label
-                htmlFor="rememberMe"
-                className="text-gray-600 cursor-pointer"
-              >
+              <label htmlFor="rememberMe" className="text-gray-600 cursor-pointer">
                 {t("rememberMe")}
               </label>
             </div>
@@ -181,20 +174,14 @@ const Login = () => {
               disabled={loading}
             />
             {loading && (
-              <p className="text-center text-gray-500">
-                {t("loggingIn")}
-              </p>
+              <p className="text-center text-gray-500">{t("loggingIn")}</p>
             )}
           </form>
           <div className="m-2">
-            <GoogleLoginButton onSuccess={handleGoogleSignIn} />
+            <GoogleLoginButton onSuccess={handleGoogleSignIn} role={formData.role} /> 
           </div>
-          {/* <TwitterLoginButton/> */}
           <div className="text-center mt-4">
-            <Link
-              to="/forgot-password"
-              className="text-indigo-600 hover:underline"
-            >
+            <Link to="/forgot-password" className="text-indigo-600 hover:underline">
               {t("forgotPassword")}
             </Link>
           </div>

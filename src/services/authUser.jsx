@@ -33,6 +33,20 @@ const authUser = {
       throw new Error(error.response?.data?.message || "Login failed");
     }
   },
+  // ✅ Google Login
+  googleLogin: async (googleToken, role) => {
+    try {
+      const response = await API.post("/auth/google", { token: googleToken, role });
+      if (response.data.token) {
+        localStorage.setItem("userToken", response.data.token);
+        localStorage.setItem("userData", JSON.stringify(response.data.user));
+        localStorage.setItem("userRole", role);
+      }
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || "Google Login failed");
+    }
+  },
 
   // Logout User
   logout: () => {
@@ -94,6 +108,19 @@ const authUser = {
   getProfile: async () => {
     const response = await API.get(`${API_URL}/profile`);
     return response.data;
+  },
+  // ✅ Delete Account
+  deleteAccount: async () => {
+    try {
+      const response = await API.delete("/auth/delete-account");
+      // Clear local storage after deleting account
+      localStorage.removeItem("userToken");
+      localStorage.removeItem("userData");
+      localStorage.removeItem("userRole");
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || "Account deletion failed");
+    }
   },
 };
 

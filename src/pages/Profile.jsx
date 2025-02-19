@@ -11,8 +11,7 @@ import {
   getProfile,
   getNotifications,
   editProfile,
-  changePassword,
-  deleteAccount,
+
 } from "../services/profileServices"; // API services
 import UserLayout from "../layouts/UserLayout";
 
@@ -26,7 +25,7 @@ const Profile = () => {
     investorsChatted: 6,
   };
 
-  const { user, role } = useAuth();
+  const { user, role, changePassword, deleteAccount } = useAuth();
   const [activeTab, setActiveTab] = useState("overview");
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -155,11 +154,10 @@ const Profile = () => {
               <li key={item.key}>
                 <button
                   onClick={() => setActiveTab(item.key)}
-                  className={`flex items-center gap-3 w-full text-left font-semibold px-5 py-3 rounded-lg border transition-all duration-200 ${
-                    activeTab === item.key
-                      ? "border-indigo-600 text-indigo-600 bg-gray-100 shadow-md"
-                      : "border-transparent text-gray-800 hover:border-indigo-400 hover:bg-indigo-100 hover:shadow-md"
-                  }`}
+                  className={`flex items-center gap-3 w-full text-left font-semibold px-5 py-3 rounded-lg border transition-all duration-200 ${activeTab === item.key
+                    ? "border-indigo-600 text-indigo-600 bg-gray-100 shadow-md"
+                    : "border-transparent text-gray-800 hover:border-indigo-400 hover:bg-indigo-100 hover:shadow-md"
+                    }`}
                 >
                   {item.icon}
                   {item.label}
