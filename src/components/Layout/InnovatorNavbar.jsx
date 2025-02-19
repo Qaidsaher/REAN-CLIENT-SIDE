@@ -50,7 +50,7 @@ const InnovatorNavbar = () => {
               { label: "Investments", path: "/investments" },
               { label: "Chat", path: "/chat" },
               { label: "My ideas", path: "/my-ideas" },
-              { label: "Help", path: "/help" },
+              { label: "My Activities", path: "/my-activity" },
             ].map((item, idx) => (
               <NavLink
                 key={idx}
@@ -123,7 +123,7 @@ const InnovatorNavbar = () => {
             { label: "Investments", path: "/investments" },
             { label: "Chat", path: "/chat" },
             { label: "My ideas", path: "/my-ideas" },
-            { label: "Help", path: "/help" },
+            { label: "My Activities", path: "/my-activity" },
           ].map((item, idx) => (
             <NavLink
               key={idx}

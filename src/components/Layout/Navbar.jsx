@@ -64,10 +64,10 @@ const Navbar = ({ selectedPage }) => {
                 Login
               </NavLink>
               <NavLink
-                to="/register"
+                to="/join-by"
                 className="ml-4 px-4 py-1 border-2 border-green-500 text-gray-700 rounded-md shadow-md transition-all duration-300 hover:bg-green-500 hover:text-white hover:border-green-600"
               >
-                Join
+                Join by
               </NavLink>
             </div>
 

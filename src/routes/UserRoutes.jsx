@@ -61,7 +61,7 @@ const UserRoutes = () => {
       <Route path="/terms" element={<TermsAndConditions />} />
       <Route path="/community-guidelines" element={<CommunityGuidelines />} />
       <Route path="/security" element={<SecurityCompliance />} />
-      <Route path="commitments" element={<Commitment />} />
+     
       {/* Private Routes for Innovators */}
       <Route element={<PrivateRoute allowedRoles={["innovator"]} />}>
         <Route path="/dashboard-innovator" element={<InnovatorDashboard />} />
@@ -91,6 +91,7 @@ const UserRoutes = () => {
         <Route path="/investors/:id" element={<InvestorProfile />} />
         <Route path="/investments" element={<InvestmentsList />} />
         <Route path="/investments/:id" element={<InvestmentDetail />} />
+        <Route path="/commitments/:id" element={<Commitment />} />
       </Route>
        
       

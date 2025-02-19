@@ -177,7 +177,7 @@ const Login = () => {
               <p className="text-center text-gray-500">{t("loggingIn")}</p>
             )}
           </form>
-          <div className="m-2">
+          <div className="my-2">
             <GoogleLoginButton onSuccess={handleGoogleSignIn} role={formData.role} /> 
           </div>
           <div className="text-center mt-4">

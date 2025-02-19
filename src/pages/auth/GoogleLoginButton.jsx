@@ -53,7 +53,7 @@ const GoogleLoginButton = ({ role }) => {
   };
 
   return (
-    <GoogleOAuthProvider clientId="813729221970-2sro6banogmr8nmosfk6eaah26obf1vt.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="122534742627-5ln7qqg0q2r87drgrlqh6nn6lsc0pu6g.apps.googleusercontent.com">
       <GoogleLogin onSuccess={handleSuccess} onError={() => console.log("Login Failed")} />
     </GoogleOAuthProvider>
   );

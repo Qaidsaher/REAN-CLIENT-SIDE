@@ -112,8 +112,10 @@ const authUser = {
   // ✅ Delete Account
   deleteAccount: async () => {
     try {
+     
       const response = await API.delete("/auth/delete-account");
       // Clear local storage after deleting account
+     
       localStorage.removeItem("userToken");
       localStorage.removeItem("userData");
       localStorage.removeItem("userRole");

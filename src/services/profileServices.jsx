@@ -28,7 +28,6 @@ export const editProfile = async (profileData) => {
             "Content-Type": "multipart/form-data",
         },
     });
-    alert(JSON.stringify(response.data))
     return response.data;
 };
 
@@ -89,5 +88,11 @@ export const getUserCommitments = async () => {
 
 export const getUserInvestments = async () => {
     const response = await API.get(`${API_URL}/investments`);
+    return response.data;
+};
+
+// ✅ Fetch a Commitment by ID
+export const getCommitmentById = async (commitmentId) => {
+    const response = await API.get(`${API_URL}/commitments/${commitmentId}`);
     return response.data;
 };

@@ -65,11 +65,9 @@ const Settings = ({ changePassword, deleteAccount }) => {
     setLoading(true);
     try {
       await deleteAccount();
-      alert("Your account has been deleted.");
-      // Redirect or log out user
+      
     } catch (error) {
       console.error("❌ Error deleting account:", error);
-      alert("Failed to delete account.");
     } finally {
       setLoading(false);
       setShowDeleteConfirm(false);

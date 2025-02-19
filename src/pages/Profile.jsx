@@ -74,9 +74,9 @@ const Profile = () => {
       const response = await editProfile(updatedProfile);
       if (response.success) {
         setProfile(response.data);
-        alert("Profile updated successfully.");
+        // alert("Profile updated successfully.");
       } else {
-        alert("Failed to update profile.");
+        // alert("Failed to update profile.");
       }
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -87,9 +87,9 @@ const Profile = () => {
     try {
       const response = await changePassword({ oldPassword, newPassword });
       if (response.success) {
-        alert("Password changed successfully.");
+        // alert("Password changed successfully.");
       } else {
-        alert("Failed to change password.");
+        // alert("Failed to change password.");
       }
     } catch (error) {
       console.error("Error changing password:", error);
@@ -97,18 +97,18 @@ const Profile = () => {
   };
 
   const handleDeleteAccount = async () => {
-    if (window.confirm("Are you sure you want to delete your account?")) {
+    
       try {
         const response = await deleteAccount();
         if (response.success) {
-          alert("Account deleted successfully.");
+          // alert("Account deleted successfully.");
           window.location.href = "/login";
         } else {
-          alert("Failed to delete account.");
+          // alert("Failed to delete account.");
         }
       } catch (error) {
         console.error("Error deleting account:", error);
-      }
+      
     }
   };
 
