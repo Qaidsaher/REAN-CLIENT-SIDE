@@ -12,12 +12,12 @@ import { useTranslation } from "react-i18next";
 
 const Login = () => {
   const { t } = useTranslation();
-  const { login, token, role ,googleLogin} = useAuth();
+  const { login, token, role, googleLogin } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    role: "innovator", // ✅ Set default role as 'innovator'
+    role: "innovator", // Default role as 'innovator'
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -64,7 +64,19 @@ const Login = () => {
     setErrors({});
 
     try {
-      await login(formData.email, formData.password, formData.role);
+      // Attempt login and check returned response for errors
+      const response = await login(
+        formData.email,
+        formData.password,
+        formData.role
+      );
+
+      if (!response.success) {
+        setErrors({ general: response.message });
+        setLoading(false);
+        return;
+      }
+
       if (rememberMe) {
         localStorage.setItem("rememberMe", JSON.stringify(formData));
       } else {
@@ -73,29 +85,25 @@ const Login = () => {
     } catch (error) {
       console.error("❌ Login Error:", error);
       setErrors({
-        general:
-          error.response?.data?.message ||
-          t("loginFailed"),
+        general: error.response?.data?.message || t("loginFailed"),
       });
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Role Button Colors
+  // Role Button Colors
   const roleColors = {
     innovator: "bg-blue-600 text-white border-blue-600",
     investor: "bg-green-600 text-white border-green-600",
     admin: "bg-red-600 text-white border-red-600",
   };
 
-  // ✅ Handle Google Sign-In
+  // Handle Google Sign-In
   const handleGoogleSignIn = async (token) => {
     try {
-      await googleLogin(token,formData.role)
-     
-      alert("kdlkl");
-      // localStorage.setItem("user", JSON.stringify(response.data.user));
+      await googleLogin(token, formData.role);
+      // You may add further actions upon successful Google login
     } catch (error) {
       console.error("Google Sign-in Error:", error.response?.data || error);
       setErrors({ general: t("googleLoginFailed") });
@@ -131,15 +139,18 @@ const Login = () => {
               error={errors.password}
             />
             <div>
-              <label className="text-gray-700 font-semibold">{t("selectRole")}</label>
+              <label className="text-gray-700 font-semibold">
+                {t("selectRole")}
+              </label>
               <div className="flex space-x-4 mt-2">
                 {["innovator", "investor", "admin"].map((option) => (
                   <label
                     key={option}
-                    className={`cursor-pointer px-2 py-0 rounded-sm border ${formData.role === option
+                    className={`cursor-pointer px-2 py-0 rounded-sm border ${
+                      formData.role === option
                         ? roleColors[option]
                         : "bg-white text-gray-600 border-gray-300"
-                      } transition-all duration-300`}
+                    } transition-all duration-300`}
                   >
                     <input
                       type="radio"

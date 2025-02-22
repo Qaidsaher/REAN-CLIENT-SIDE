@@ -56,7 +56,7 @@ const InvestorProfile = () => {
             <img
               src={
                 investor.photo
-                  ? `http://localhost:5000${investor.photo}`
+                  ? `${investor.photo}`
                   : "https://via.placeholder.com/150"
               }
               alt={investor.firstName}

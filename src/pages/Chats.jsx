@@ -152,7 +152,7 @@ const Chats = () => {
                   {chat.participant?.photo ? (
                     // ✅ Show User's Profile Photo if Available
                     <img
-                      src={`http://localhost:5000${chat.participant.photo}`}
+                      src={`${chat.participant.photo}`}
                       alt="User Profile"
                       className="w-10 h-10 rounded-full border border-gray-300 object-cover"
                     />
@@ -209,7 +209,7 @@ const Chats = () => {
                     {selectedChatUser?.photo ? (
                       // ✅ Show User's Profile Photo if Available
                       <img
-                        src={`http://localhost:5000${selectedChatUser.photo}`}
+                        src={`${selectedChatUser.photo}`}
                         alt="User Profile"
                         className="w-12 h-12 rounded-full border-2 border-indigo-500 shadow-md object-cover"
                       />

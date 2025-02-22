@@ -6,6 +6,7 @@ import Settings from "../components/Profile/Settings";
 import Notifications from "../components/Profile/Notifications";
 import { useAuth } from "../contexts/AuthContext";
 import { FaUser, FaEdit, FaCog, FaBell } from "react-icons/fa";
+import Notification from "../components/UI/Notification";
 
 import {
   getProfile,
@@ -24,7 +25,13 @@ const Profile = () => {
     commitments: 4,
     investorsChatted: 6,
   };
+  const [message, setMessage] = useState(null);
+  const [messageType, setMessageType] = useState("success");
 
+  const showMessage = (text, type = "success") => {
+    setMessage(text);
+    setMessageType(type);
+  };
   const { user, role, changePassword, deleteAccount } = useAuth();
   const [activeTab, setActiveTab] = useState("overview");
   const [profile, setProfile] = useState(null);
@@ -54,6 +61,7 @@ const Profile = () => {
         if (data) {
           setNotifications(data);
         } else {
+          showMessage("Error fetching notifications:" + error)
           // console.error("Error fetching notifications:", .error);
         }
       } catch (error) {
@@ -72,14 +80,14 @@ const Profile = () => {
   const handleEditProfile = async (updatedProfile) => {
     try {
       const response = await editProfile(updatedProfile);
-      if (response.success) {
-        setProfile(response.data);
-        // alert("Profile updated successfully.");
-      } else {
-        // alert("Failed to update profile.");
-      }
+      const profileData = await getProfile();
+      setProfile(profileData.user);
+
+      showMessage("Profile updated successfully")
+      // alert("Profile updated successfully.");
+
     } catch (error) {
-      console.error("Error updating profile:", error);
+      showMessage("Failed to update profile:" + error, "error")
     }
   };
 
@@ -87,28 +95,30 @@ const Profile = () => {
     try {
       const response = await changePassword({ oldPassword, newPassword });
       if (response.success) {
+        showMessage("Password changed successfully")
         // alert("Password changed successfully.");
       } else {
         // alert("Failed to change password.");
       }
     } catch (error) {
       console.error("Error changing password:", error);
+      showMessage("Error changing password::" + error, "error")
     }
   };
 
   const handleDeleteAccount = async () => {
-    
-      try {
-        const response = await deleteAccount();
-        if (response.success) {
-          // alert("Account deleted successfully.");
-          window.location.href = "/login";
-        } else {
-          // alert("Failed to delete account.");
-        }
-      } catch (error) {
-        console.error("Error deleting account:", error);
-      
+
+    try {
+      const response = await deleteAccount();
+      if (response.success) {
+        // alert("Account deleted successfully.");
+        window.location.href = "/login";
+      } else {
+        // alert("Failed to delete account.");
+      }
+    } catch (error) {
+      console.error("Error deleting account:", error);
+
     }
   };
 
@@ -142,6 +152,11 @@ const Profile = () => {
   return (
     <UserLayout selectedPage="profile">
       <div className="flex flex-col md:flex-row gap-8 min-h-[90vh]">
+        <Notification
+          message={message}
+          messageType={messageType}
+          onClose={() => setMessage(null)}
+        />
         {/* ✅ Sidebar Navigation */}
         <nav className="w-full md:w-1/4 bg-white shadow-md rounded-md p-6 md:min-h-[90vh]">
           <ul className="space-y-3">

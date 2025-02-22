@@ -122,7 +122,7 @@ const InnovationDetail = () => {
                   className="w-full h-72 object-cover rounded-lg shadow-lg"
                 >
                   <source
-                    src={`http://localhost:5000${innovation.video}`}
+                    src={`${innovation.video}`}
                     type="video/mp4"
                   />
                   Your browser does not support the video tag.
@@ -130,7 +130,7 @@ const InnovationDetail = () => {
               </div>
             ) : innovation.image ? (
               <img
-                src={`http://localhost:5000${innovation.image}`}
+                src={`${innovation.image}`}
                 alt={innovation.name}
                 className="w-full h-72 object-cover rounded-lg shadow-lg"
               />

@@ -105,14 +105,11 @@ const InnovationsList = () => {
               >
                 {/* Innovation Image */}
                 <img
-                  src={
-                    innovation.image
-                      ? `http://localhost:5000${innovation.image}`
-                      : "https://via.placeholder.com/300"
-                  }
+                  src={innovation.image ? innovation.image : "https://via.placeholder.com/300"}
                   alt={innovation.name}
                   className="w-full h-48 object-cover rounded-md mb-4"
                 />
+
 
                 {/* Innovation Details */}
                 <h3 className="text-xl font-semibold text-gray-900">
@@ -131,7 +128,7 @@ const InnovationsList = () => {
                   <img
                     src={
                       innovation.createdBy.photo
-                        ? `http://localhost:5000${innovation.createdBy.photo}`
+                        ? `${innovation.createdBy.photo}`
                         : "https://via.placeholder.com/40"
                     }
                     alt="Innovator"

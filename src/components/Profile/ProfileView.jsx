@@ -25,7 +25,7 @@ const ProfileView = ({ profile, role, stats }) => {
           <img
             src={
               profile.photo
-                ? "http://localhost:5000" + profile.photo
+                ? profile.photo
                 : "https://via.placeholder.com/150"
             }
             alt="Profile"

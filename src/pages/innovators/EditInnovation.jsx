@@ -29,7 +29,7 @@ const EditInnovation = () => {
     try {
       const data = await getInnovationById(id);
       setFormData(data);
-      setImagePreview(data.image ? `http://localhost:5000${data.image}` : null);
+      setImagePreview(data.image ? data.image : null);
     } catch (error) {
       console.error("❌ Error fetching innovation:", error);
     }
@@ -47,6 +47,7 @@ const EditInnovation = () => {
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "image" && files[0]) {
+      // Save the file object
       setFormData({ ...formData, image: files[0] });
       setImagePreview(URL.createObjectURL(files[0]));
     } else {
@@ -58,18 +59,33 @@ const EditInnovation = () => {
     e.preventDefault();
     setLoading(true);
 
-    setTimeout(async () => {
-      try {
-        await updateInnovation(id, formData);
-        alert("🎉 Innovation updated successfully!");
-        navigate("/innovator/innovations");
-      } catch (error) {
-        alert("❌ Error updating innovation. Please try again.");
-        console.error("Error updating innovation:", error);
-      } finally {
-        setLoading(false);
+    try {
+      // Create a FormData instance and append fields
+      const formDataToSend = new FormData();
+      formDataToSend.append("name", formData.name);
+      formDataToSend.append("cost", formData.cost);
+      formDataToSend.append("description", formData.description);
+      formDataToSend.append("details", formData.details);
+      // If category is an object, append its _id, otherwise append the value directly
+      formDataToSend.append(
+        "category",
+        typeof formData.category === "object" ? formData.category._id : formData.category
+      );
+
+      // Append other fields as necessary
+      // If the image is a File object then append it; otherwise, if no new image was chosen, do not append.
+      if (formData.image instanceof File) {
+        formDataToSend.append("image", formData.image);
       }
-    }, 3000);
+
+      // Call the update service with the FormData instance
+      await updateInnovation(id, formDataToSend);
+      navigate("/my-ideas");
+    } catch (error) {
+      console.error("Error updating innovation:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!formData) {
@@ -80,7 +96,7 @@ const EditInnovation = () => {
 
   return (
     <UserLayout selectedPage={"my-ideas"}>
-      <div className="max-w-7xl mx-auto p-8 bg-white rounded-lg shadow-md ">
+      <div className="max-w-7xl mx-auto p-8 bg-white rounded-lg shadow-md">
         <motion.h2
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -129,18 +145,14 @@ const EditInnovation = () => {
               </label>
               <select
                 name="category"
-                value={formData.category._id}
+                value={typeof formData.category === "object" ? formData.category._id : formData.category}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg p-3 transition focus:ring-indigo-500"
               >
                 <option value="">Select a Category</option>
                 {categories.length > 0 ? (
                   categories.map((cat) => (
-                    <option
-                      key={cat._id}
-                      value={cat._id}
-                      selected={formData.category._id === cat._id}
-                    >
+                    <option key={cat._id} value={cat._id}>
                       {cat.name}
                     </option>
                   ))
@@ -148,9 +160,10 @@ const EditInnovation = () => {
                   <option value="">Loading categories...</option>
                 )}
               </select>
+
             </div>
             {/* Image Upload */}
-            <div className="flex items-center gap-4 ">
+            <div className="flex items-center gap-4">
               <label className="cursor-pointer flex items-center gap-2 text-indigo-600 hover:text-indigo-700 transition">
                 <FaUpload />
                 Upload Image
@@ -175,9 +188,8 @@ const EditInnovation = () => {
           {/* Submit Button with Loading Animation */}
           <button
             type="submit"
-            className={`flex justify-center items-center bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 transition ${
-              loading ? "cursor-not-allowed opacity-80" : ""
-            }`}
+            className={`flex justify-center items-center bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 transition ${loading ? "cursor-not-allowed opacity-80" : ""
+              }`}
             disabled={loading}
           >
             {loading ? (

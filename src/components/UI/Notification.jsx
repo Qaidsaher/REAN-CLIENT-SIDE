@@ -6,7 +6,7 @@ const Notification = ({ message, messageType, onClose }) => {
     if (message) {
       const timer = setTimeout(() => {
         onClose();
-      }, 5000);
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [message, onClose]);
@@ -15,7 +15,7 @@ const Notification = ({ message, messageType, onClose }) => {
 
   return (
     <div 
-      className={`fixed top-5 right-5 flex items-center gap-2 px-4 py-2 rounded-lg text-white transition-opacity duration-500 shadow-lg 
+      className={`fixed top-5 z-50 right-5 flex items-center gap-2 px-4 py-2 rounded-lg text-white transition-opacity duration-500 shadow-lg 
         ${messageType === "success" ? "bg-green-500" : "bg-red-500"}`}>
       {messageType === "success" ? <FaCheckCircle /> : <FaExclamationCircle />}
       <span>{message}</span>

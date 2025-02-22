@@ -64,19 +64,20 @@ const ShowInnovation = () => {
                 <video
                   controls
                   className="w-full h-72 object-cover rounded-lg shadow-lg"
-                  src={`http://localhost:5000${innovation.video}`}
+                  src={`${innovation.video}`}
                 />
                 <div className="absolute top-2 left-2 bg-black bg-opacity-50 text-white px-3 py-1 rounded-md flex items-center gap-2">
                   <FaPlayCircle /> Video
                 </div>
               </div>
             )}
+           
 
             {/* Image Preview */}
             {innovation.image && (
               <div className="relative">
                 <img
-                  src={`http://localhost:5000${innovation.image}`}
+                  src={innovation.image}
                   alt={innovation.name}
                   className="w-full h-72 object-cover rounded-lg shadow-lg"
                 />
@@ -176,7 +177,7 @@ const ShowInnovation = () => {
             <img
               src={
                 innovation.createdBy.photo
-                  ? `http://localhost:5000${innovation.createdBy.photo}`
+                  ? `${innovation.createdBy.photo}`
                   : "https://via.placeholder.com/50"
               }
               alt="Innovator"

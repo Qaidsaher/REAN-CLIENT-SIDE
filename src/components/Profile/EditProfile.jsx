@@ -9,7 +9,7 @@ const EditProfile = ({ profile, updateProfile }) => {
 
   useEffect(() => {
     if (profile) {
-      const image = "http://localhost:5000" + profile?.photo;
+      const image =  profile?.photo;
       setFormData(profile);
       setPhotoPreview(image);
     }

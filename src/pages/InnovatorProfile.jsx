@@ -67,7 +67,7 @@ const InnovatorProfile = () => {
             <img
               src={
                 innovator.photo
-                  ? `http://localhost:5000${innovator.photo}`
+                  ? `${innovator.photo}`
                   : "https://via.placeholder.com/150"
               }
               alt={innovator.firstName}

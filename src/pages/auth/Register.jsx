@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext"; // ✅ Import useAuth()
+import { useAuth } from "../../contexts/AuthContext";
 import InputField from "@/components/UI/InputField";
 import Button from "@/components/UI/Button";
 import LoadingSpinner from "@/components/UI/LoadingSpinner";
@@ -8,12 +8,11 @@ import { Link } from "react-router-dom";
 import GuestLayout from "../../layouts/GuestLayout";
 
 const Register = () => {
-  const { register, token, role } = useAuth(); // ✅ Use useAuth for authentication
+  const { register, token, role } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (token) {
-      // Redirect based on role
       if (role === "innovator") {
         navigate("/dashboard-innovator");
       } else if (role === "investor") {
@@ -21,7 +20,7 @@ const Register = () => {
       }
     }
   }, [token, role, navigate]);
-  // ✅ Form state with all required fields
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -32,53 +31,73 @@ const Register = () => {
     birthday: "",
     city: "",
     education: "",
-    role: "innovator", // Default role
-    termsAccepted: false, // Only for UI validation, NOT to be sent in request
+    role: "innovator",
+    termsAccepted: false,
   });
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  // ✅ Handle input changes
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: type === "checkbox" ? checked : value,
     }));
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" })); // Clear errors on input change
+    // Clear errors on input change
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
   };
 
-  // ✅ Handle Form Validation
   const validate = () => {
     let newErrors = {};
+    // Regex for a basic email validation check
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     if (!formData.firstName.trim())
       newErrors.firstName = "First name is required";
-    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
-    if (!formData.email.trim()) newErrors.email = "Email is required";
-    if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
-    if (!formData.password.trim()) newErrors.password = "Password is required";
+    if (!formData.lastName.trim())
+      newErrors.lastName = "Last name is required";
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+    if (!formData.phone.trim())
+      newErrors.phone = "Phone number is required";
+    if (!formData.birthday)
+      newErrors.birthday = "Birthday is required";
+    if (!formData.city.trim())
+      newErrors.city = "City is required";
+    if (!formData.education.trim())
+      newErrors.education = "Education is required";
+    if (!formData.password.trim())
+      newErrors.password = "Password is required";
     if (formData.password !== formData.confirmPassword)
       newErrors.confirmPassword = "Passwords do not match";
     if (!formData.termsAccepted)
       newErrors.termsAccepted = "You must accept the Terms & Conditions";
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // ✅ Handle Form Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
 
     try {
-      // ✅ Create a copy of `formData` WITHOUT `termsAccepted`
       const { termsAccepted, confirmPassword, ...submitData } = formData;
-
-      // ✅ Register the user
       const response = await register(submitData);
-      console.log("✅ Registered Successfully:", response);
+      // Check if the registration was unsuccessful
+      if (!response.success) {
+        setErrors({ general: response.message });
+        setLoading(false);
+        return;
+      }
+      console.log("Registered Successfully:", response);
+
+     
     } catch (error) {
       setErrors({
         general: error.response?.data?.message || "Registration failed",
@@ -95,8 +114,8 @@ const Register = () => {
           <h2 className="text-3xl font-bold text-indigo-700 mb-4">
             Create an Account
           </h2>
-          <p className="text-gray-600  mb-4">
-            Fill in your details to sign up.
+          <p className="text-gray-600 mb-4 ">
+            Fill in your details correctly to sign up.
           </p>
 
           {errors.general && (
@@ -104,7 +123,6 @@ const Register = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* ✅ Grid Layout (1 column for small screens, 2 columns for lg screens) */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-x-2">
               <InputField
                 label="First Name"
@@ -146,6 +164,7 @@ const Register = () => {
                 type="date"
                 value={formData.birthday}
                 onChange={handleChange}
+                error={errors.birthday}
               />
               <InputField
                 label="City"
@@ -153,6 +172,7 @@ const Register = () => {
                 placeholder="Enter your city"
                 value={formData.city}
                 onChange={handleChange}
+                error={errors.city}
               />
               <InputField
                 label="Education"
@@ -160,6 +180,7 @@ const Register = () => {
                 placeholder="Enter your education"
                 value={formData.education}
                 onChange={handleChange}
+                error={errors.education}
               />
               <InputField
                 label="Password"
@@ -179,7 +200,6 @@ const Register = () => {
                 onChange={handleChange}
                 error={errors.confirmPassword}
               />
-              {/* ✅ Role Selection */}
               <div>
                 <label className="text-gray-700">Select Role</label>
                 <select
@@ -194,7 +214,6 @@ const Register = () => {
               </div>
             </div>
 
-            {/* ✅ Terms & Conditions */}
             <div className="flex items-center">
               <input
                 type="checkbox"
@@ -209,9 +228,11 @@ const Register = () => {
                   Terms & Conditions
                 </a>
               </span>
+              {errors.termsAccepted && (
+                <p className="text-red-600 ml-2 text-sm">{errors.termsAccepted}</p>
+              )}
             </div>
 
-            {/* ✅ Submit Button with Spinner */}
             <Button
               type="submit"
               text={loading ? <LoadingSpinner color="white" /> : "Register"}
@@ -222,10 +243,7 @@ const Register = () => {
           </form>
 
           <div className="text-center mt-4">
-            <Link
-              to="/forgot-password"
-              className="text-indigo-600 hover:underline"
-            >
+            <Link to="/forgot-password" className="text-indigo-600 hover:underline">
               Forgot Password?
             </Link>
           </div>
