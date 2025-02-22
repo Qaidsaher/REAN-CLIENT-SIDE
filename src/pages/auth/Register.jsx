@@ -48,6 +48,38 @@ const Register = () => {
     setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
   };
 
+  // const validate = () => {
+  //   let newErrors = {};
+  //   // Regex for a basic email validation check
+  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  //   if (!formData.firstName.trim())
+  //     newErrors.firstName = "First name is required";
+  //   if (!formData.lastName.trim())
+  //     newErrors.lastName = "Last name is required";
+  //   if (!formData.email.trim()) {
+  //     newErrors.email = "Email is required";
+  //   } else if (!emailRegex.test(formData.email)) {
+  //     newErrors.email = "Please enter a valid email address";
+  //   }
+  //   if (!formData.phone.trim())
+  //     newErrors.phone = "Phone number is required";
+  //   if (!formData.birthday)
+  //     newErrors.birthday = "Birthday is required";
+  //   if (!formData.city.trim())
+  //     newErrors.city = "City is required";
+  //   if (!formData.education.trim())
+  //     newErrors.education = "Education is required";
+  //   if (!formData.password.trim())
+  //     newErrors.password = "Password is required";
+  //   if (formData.password !== formData.confirmPassword)
+  //     newErrors.confirmPassword = "Passwords do not match";
+  //   if (!formData.termsAccepted)
+  //     newErrors.termsAccepted = "You must accept the Terms & Conditions";
+
+  //   setErrors(newErrors);
+  //   return Object.keys(newErrors).length === 0;
+  // };
   const validate = () => {
     let newErrors = {};
     // Regex for a basic email validation check
@@ -70,8 +102,24 @@ const Register = () => {
       newErrors.city = "City is required";
     if (!formData.education.trim())
       newErrors.education = "Education is required";
-    if (!formData.password.trim())
+
+    // Password validations
+    if (!formData.password.trim()) {
       newErrors.password = "Password is required";
+    } else {
+      const lowercaseRegex = /(?=.*[a-z])/;
+      const uppercaseRegex = /(?=.*[A-Z])/;
+      const numberRegex = /(?=.*\d)/;
+
+      if (!lowercaseRegex.test(formData.password)) {
+        newErrors.password = "Password must contain at least one lowercase letter";
+      } else if (!uppercaseRegex.test(formData.password)) {
+        newErrors.password = "Password must contain at least one uppercase letter";
+      } else if (!numberRegex.test(formData.password)) {
+        newErrors.password = "Password must contain at least one number";
+      }
+    }
+
     if (formData.password !== formData.confirmPassword)
       newErrors.confirmPassword = "Passwords do not match";
     if (!formData.termsAccepted)
@@ -80,6 +128,7 @@ const Register = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -97,7 +146,7 @@ const Register = () => {
       }
       console.log("Registered Successfully:", response);
 
-     
+
     } catch (error) {
       setErrors({
         general: error.response?.data?.message || "Registration failed",
