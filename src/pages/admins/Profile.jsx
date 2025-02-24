@@ -2,41 +2,30 @@ import React, { useEffect, useState } from "react";
 import AdminLayout from "../../layouts/AdminLayout";
 import Notification from "../../components/UI/Notification";
 import InputField from "../../components/UI/InputField";
-import {
-  getProfile,
-  updateProfile,
-  deleteAccount,
-  logout,
-} from "../../services/authAdmin";
+import { useAuth } from "../../contexts/AuthContext"; // Adjust the path as needed
 
 const Profile = () => {
-  const [profile, setProfile] = useState({});
+  const { profile, updateAdminProfile, deleteAccount, logout } = useAuth();
+  // Use a local state copy to allow editing before submitting
+  const [localProfile, setLocalProfile] = useState(profile || {});
   const [message, setMessage] = useState(null);
   const [messageType, setMessageType] = useState("success");
 
+  // Whenever the context profile changes, update the local copy.
   useEffect(() => {
-    fetchProfile();
-  }, []);
+    setLocalProfile(profile || {});
+  }, [profile]);
 
   const showMessage = (text, type = "success") => {
     setMessage(text);
     setMessageType(type);
   };
 
-  const fetchProfile = async () => {
-    try {
-      const data = await getProfile();
-      setProfile(data);
-    } catch (error) {
-      console.error("Error fetching profile:", error);
-      showMessage("Error fetching profile", "error");
-    }
-  };
-
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      await updateProfile(profile);
+      // Call the updateAdminProfile function from the context.
+      await updateAdminProfile(localProfile.name, localProfile.email);
       showMessage("Profile updated successfully", "success");
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -54,9 +43,9 @@ const Profile = () => {
     }
   };
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     try {
-      await logout();
+      logout();
       showMessage("Logged out successfully", "success");
     } catch (error) {
       console.error("Error logging out:", error);
@@ -68,14 +57,14 @@ const Profile = () => {
     <AdminLayout selectedNav={"profile"}>
       <div className="p-6 bg-white shadow-md rounded-md my-6">
         <h2 className="text-xl font-bold mb-4">Profile Information</h2>
-        <form onSubmit={handleUpdate} className="">
+        <form onSubmit={handleUpdate}>
           <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
             <div>
               <InputField
                 label="Name"
-                value={profile.name || ""}
+                value={localProfile.name || ""}
                 onChange={(e) =>
-                  setProfile({ ...profile, name: e.target.value })
+                  setLocalProfile({ ...localProfile, name: e.target.value })
                 }
               />
             </div>
@@ -83,25 +72,14 @@ const Profile = () => {
               <InputField
                 label="Email"
                 type="email"
-                value={profile.email || ""}
+                value={localProfile.email || ""}
                 onChange={(e) =>
-                  setProfile({ ...profile, email: e.target.value })
-                }
-              />
-            </div>
-            <div>
-              <InputField
-                label="Phone Number"
-                type="text"
-                value={profile.phone || ""}
-                onChange={(e) =>
-                  setProfile({ ...profile, phone: e.target.value })
+                  setLocalProfile({ ...localProfile, email: e.target.value })
                 }
               />
             </div>
           </div>
-
-          <div className="flex justify-end ">
+          <div className="flex justify-end mt-4">
             <button
               type="submit"
               className="bg-blue-600 text-white px-4 py-2 rounded-md"
@@ -113,25 +91,24 @@ const Profile = () => {
       </div>
       <div className="p-6 bg-white shadow-md rounded-md my-6">
         <h2 className="text-xl font-bold mb-4">Account Actions</h2>
-        <p>when deleting you account it want be reconvery !</p>
-        <div className="flex justify-end ">
+        <p>When deleting your account, it cannot be recovered!</p>
+        <div className="flex justify-end mt-4">
           <button
             type="button"
-            className="bg-gray-600 text-white px-4 py-2 rounded-md "
+            className="bg-gray-600 text-white px-4 py-2 rounded-md"
             onClick={handleLogout}
           >
             Logout
           </button>
         </div>
       </div>
-
       <div className="p-6 bg-white shadow-md rounded-md my-6">
         <h2 className="text-xl font-bold mb-4">Account Actions</h2>
-        <p>when deleting you account it want be reconvery !</p>
-        <div className="flex justify-end ">
+        <p>When deleting your account, it cannot be recovered!</p>
+        <div className="flex justify-end mt-4">
           <button
             type="button"
-            className="bg-red-600 text-white px-4 py-2 rounded-md  mb-4"
+            className="bg-red-600 text-white px-4 py-2 rounded-md"
             onClick={handleDelete}
           >
             Delete Account

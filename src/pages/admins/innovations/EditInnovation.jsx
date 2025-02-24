@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FaEdit, FaUpload, FaSpinner, FaExclamationCircle, FaCheckCircle, FaClock, FaTimesCircle } from "react-icons/fa";
+import {
+  FaEdit,
+  FaUpload,
+  FaSpinner,
+  FaExclamationCircle,
+  FaCheckCircle,
+  FaClock,
+  FaTimesCircle,
+  FaVideo,
+} from "react-icons/fa";
 import TextAreaField from "../../../components/UI/TextAreaField";
 import InputField from "../../../components/UI/InputField";
-import { getInnovationById, updateInnovation } from "../../../services/innovators";
+import { getInnovationById, updateInnovation } from "../../../services/admins/innovationService";
 import { getCategories, getInnovators } from "../../../services/websiteService";
 import { motion } from "framer-motion";
 import AdminLayout from "../../../layouts/AdminLayout";
@@ -14,10 +23,12 @@ const EditInnovation = () => {
 
   const [formData, setFormData] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [videoPreview, setVideoPreview] = useState(null);
   const [categories, setCategories] = useState([]);
   const [innovators, setInnovators] = useState([]);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  // We'll store status in lowercase for consistency
   const [status, setStatus] = useState("");
 
   useEffect(() => {
@@ -28,9 +39,18 @@ const EditInnovation = () => {
   const fetchInnovation = async () => {
     try {
       const data = await getInnovationById(id);
-      setFormData(data);
-      setImagePreview(data.image ? `http://localhost:5000${data.image}` : null);
-      setStatus(data.status);
+      // Convert the category field to its id if it's an object
+      const updatedData = { 
+        ...data, 
+        category: data.category && typeof data.category === "object" ? data.category._id : data.category 
+      };
+      setFormData(updatedData);
+      setImagePreview(data.image ? data.image : null);
+      setVideoPreview(data.video ? data.video : null);
+      // Normalize status to lowercase and merge into formData
+      const normalizedStatus = data.status.toLowerCase();
+      setStatus(normalizedStatus);
+      setFormData(prev => ({ ...prev, status: normalizedStatus }));
     } catch (error) {
       console.error("❌ Error fetching innovation:", error);
     }
@@ -50,9 +70,12 @@ const EditInnovation = () => {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === "image" && files[0]) {
+    if (name === "image" && files && files[0]) {
       setFormData({ ...formData, image: files[0] });
       setImagePreview(URL.createObjectURL(files[0]));
+    } else if (name === "video" && files && files[0]) {
+      setFormData({ ...formData, video: files[0] });
+      setVideoPreview(URL.createObjectURL(files[0]));
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -61,10 +84,15 @@ const EditInnovation = () => {
 
   const validateForm = () => {
     let validationErrors = {};
-    if (!formData.name?.trim()) validationErrors.name = "Innovation Name is required.";
-    if (!formData.description?.trim()) validationErrors.description = "Short Description is required.";
-    if (!formData.details?.trim()) validationErrors.details = "Details are required.";
-    if (!formData.cost?.trim()) validationErrors.cost = "Cost is required.";
+    if (!formData.name?.trim())
+      validationErrors.name = "Innovation Name is required.";
+    if (!formData.description?.trim())
+      validationErrors.description = "Short Description is required.";
+    if (!formData.details?.trim())
+      validationErrors.details = "Details are required.";
+    if (!formData.cost?.toString().trim())
+      validationErrors.cost = "Cost is required.";
+    if (!status.trim()) validationErrors.status = "Status is required.";
 
     setErrors(validationErrors);
     return Object.keys(validationErrors).length === 0;
@@ -74,10 +102,10 @@ const EditInnovation = () => {
     e.preventDefault();
     if (!validateForm()) return;
     setLoading(true);
-
     try {
+      // Merge the current status into the payload.
       await updateInnovation(id, { ...formData, status });
-      navigate("/innovator/innovations");
+      navigate("/admin/innovations");
     } catch (error) {
       console.error("❌ Error updating innovation:", error);
     } finally {
@@ -86,16 +114,25 @@ const EditInnovation = () => {
   };
 
   const handleStatusChange = async (newStatus) => {
-    setStatus(newStatus);
+    // Normalize status to lowercase.
+    const normalizedStatus = newStatus;
+    setStatus(normalizedStatus);
+    // Update the formData with the new status as well.
+    setFormData({ ...formData, status: normalizedStatus });
     try {
-      await updateInnovation(id, { ...formData, status: newStatus });
+      // Optionally update status immediately (if desired)
+      await updateInnovation(id, { ...formData, status: normalizedStatus });
     } catch (error) {
       console.error("❌ Error updating status:", error);
     }
   };
 
   if (!formData) {
-    return <p className="text-center text-gray-600">Loading innovation details...</p>;
+    return (
+      <p className="text-center text-gray-600">
+        Loading innovation details...
+      </p>
+    );
   }
 
   return (
@@ -114,11 +151,12 @@ const EditInnovation = () => {
         <div className="mb-6 flex items-center gap-4">
           <button
             type="button"
-            onClick={() => handleStatusChange("accepted")}
-            className={`px-2 py-1 font-semibold border-1 rounded-md transition-all duration-300 ${status === "Accepted"
+            onClick={() => handleStatusChange("Accepted")}
+            className={`px-2 py-1 font-semibold border rounded-md transition-all duration-300 ${
+              status === "Accepted"
                 ? "border-green-500 bg-green-500 text-white"
                 : "border-green-500 text-green-500 hover:border-green-600 hover:text-green-600"
-              }`}
+            }`}
           >
             <FaCheckCircle className="inline mr-2" />
             Accepted
@@ -126,11 +164,12 @@ const EditInnovation = () => {
 
           <button
             type="button"
-            onClick={() => handleStatusChange("pending")}
-            className={`px-2 py-1 font-semibold border-1 rounded-md transition-all duration-300 ${status === "Pending"
+            onClick={() => handleStatusChange("Pending")}
+            className={`px-2 py-1 font-semibold border rounded-md transition-all duration-300 ${
+              status === "Pending"
                 ? "border-yellow-500 bg-yellow-500 text-white"
                 : "border-yellow-500 text-yellow-500 hover:border-yellow-600 hover:text-yellow-600"
-              }`}
+            }`}
           >
             <FaClock className="inline mr-2" />
             Pending
@@ -138,32 +177,36 @@ const EditInnovation = () => {
 
           <button
             type="button"
-            onClick={() => handleStatusChange("rejected")}
-            className={`px-2 py-1 font-semibold border-1 rounded-md transition-all duration-300 ${status === "Rejected"
+            onClick={() => handleStatusChange("Rejected")}
+            className={`px-2 py-1 font-semibold border rounded-md transition-all duration-300 ${
+              status === "Rejected"
                 ? "border-red-500 bg-red-500 text-white"
                 : "border-red-500 text-red-500 hover:border-red-600 hover:text-red-600"
-              }`}
+            }`}
           >
             <FaTimesCircle className="inline mr-2" />
             Rejected
           </button>
         </div>
 
-
         {/* Current Status Display */}
         <div className="mb-4">
           <span className="text-lg font-bold">Current Status: </span>
           <span
-            className={`px-3 py-1 text-white rounded ${status === "Accepted"
+            className={`px-3 py-1 text-white rounded ${
+              status === "accepted"
                 ? "bg-green-600"
-                : status === "Pending"
-                  ? "bg-yellow-500"
-                  : "bg-red-500"
-              }`}
+                : status === "pending"
+                ? "bg-yellow-500"
+                : "bg-red-500"
+            }`}
           >
             {status.charAt(0).toUpperCase() + status.slice(1)}
           </span>
         </div>
+
+        {/* Hidden input to include status in the form */}
+        <input type="hidden" name="status" value={status} />
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Grid Layout for Inputs */}
@@ -204,7 +247,9 @@ const EditInnovation = () => {
 
             {/* Category Dropdown (Disabled) */}
             <div>
-              <label className="block text-gray-700 font-semibold mb-2">Category</label>
+              <label className="block text-gray-700 font-semibold mb-2">
+                Category
+              </label>
               <select
                 name="category"
                 value={formData.category}
@@ -212,7 +257,7 @@ const EditInnovation = () => {
                 className="w-full border bg-gray-200 cursor-not-allowed border-gray-300 rounded-lg p-3"
               >
                 {categories.map((cat) => (
-                  <option key={cat._id} value={cat._id} selected={formData.category === cat._id}>
+                  <option key={cat._id} value={cat._id}>
                     {cat.name}
                   </option>
                 ))}
@@ -221,7 +266,9 @@ const EditInnovation = () => {
 
             {/* Innovator Dropdown (Disabled) */}
             <div>
-              <label className="block text-gray-700 font-semibold mb-2">Innovator</label>
+              <label className="block text-gray-700 font-semibold mb-2">
+                Innovator
+              </label>
               <select
                 name="innovator"
                 value={formData.innovator}
@@ -229,7 +276,7 @@ const EditInnovation = () => {
                 className="w-full border bg-gray-200 cursor-not-allowed border-gray-300 rounded-lg p-3"
               >
                 {innovators.map((innovator) => (
-                  <option key={innovator._id} value={innovator._id} selected={formData.innovator === innovator._id}>
+                  <option key={innovator._id} value={innovator._id}>
                     {innovator.firstName} {innovator.lastName}
                   </option>
                 ))}
@@ -238,25 +285,62 @@ const EditInnovation = () => {
           </div>
 
           {/* Image Upload */}
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col md:flex-row items-center gap-4">
+            {imagePreview && (
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="w-24 h-24 rounded-md border shadow-md"
+              />
+            )}
             <label className="cursor-pointer flex items-center gap-2 text-indigo-600 hover:text-indigo-700 transition">
               <FaUpload />
               Upload Image
-              <input type="file" name="image" accept="image/*" className="hidden" onChange={handleChange} />
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                className="hidden"
+                onChange={handleChange}
+              />
             </label>
-            {imagePreview && (
-              <img src={imagePreview} alt="Preview" className="w-24 h-24 rounded-md border shadow-md" />
+          </div>
+
+          {/* Video Upload */}
+          <div className="flex flex-col md:flex-row items-center gap-4">
+            {videoPreview && (
+              <video className="w-24 h-24 rounded-md border shadow-md" controls>
+                <source src={videoPreview} type="video/mp4" />
+              </video>
             )}
+            <label className="cursor-pointer flex items-center gap-2 text-indigo-600 hover:text-indigo-700 transition">
+              <FaVideo />
+              Upload Video
+              <input
+                type="file"
+                name="video"
+                accept="video/*"
+                className="hidden"
+                onChange={handleChange}
+              />
+            </label>
           </div>
 
           {/* Submit Button */}
           <button
             type="submit"
-            className={`flex justify-center items-center bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 transition ${loading ? "cursor-not-allowed opacity-80" : ""
-              }`}
+            className={`flex justify-center items-center bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 transition ${
+              loading ? "cursor-not-allowed opacity-80" : ""
+            }`}
             disabled={loading}
           >
-            {loading ? <><FaSpinner className="animate-spin mr-2" /> Updating...</> : "Save Changes"}
+            {loading ? (
+              <>
+                <FaSpinner className="animate-spin mr-2" /> Updating...
+              </>
+            ) : (
+              "Save Changes"
+            )}
           </button>
         </form>
       </div>

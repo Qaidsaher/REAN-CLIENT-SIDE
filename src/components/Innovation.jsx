@@ -137,7 +137,7 @@ const Innovation = () => {
               className="relative bg-white rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden"
             >
               <img
-                src={innovation.photo}
+                src={innovation.image}
                 alt={innovation.name}
                 className="w-full h-56 object-cover rounded-t-lg"
               />

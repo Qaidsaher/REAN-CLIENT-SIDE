@@ -25,10 +25,26 @@ export const createInnovation = async (innovation) => {
 };
 
 // Update innovation by ID (Admin only)
-export const updateInnovation = async (id, innovation) => {
-  const response = await api.put(`${API_URL}/update/${id}`, innovation);
+// export const updateInnovation = async (id, innovation) => {
+//   const response = await api.put(`${API_URL}/update/${id}`, innovation);
+//   return response.data;
+// };
+export const updateInnovation = async (id, innovationData) => {
+  const formData = new FormData();
+  // Loop through keys and append each to FormData.
+  Object.keys(innovationData).forEach((key) => {
+    // If the field is a file, it will be appended correctly.
+    formData.append(key, innovationData[key]);
+  });
+  
+  const response = await api.put(`${API_URL}/update/${id}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return response.data;
 };
+
 
 // Delete innovation by ID (Admin only)
 export const deleteInnovation = async (id) => {

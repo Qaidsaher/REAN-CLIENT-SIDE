@@ -91,6 +91,23 @@ const authUser = {
       );
     }
   },
+  // ✅ Update Admin Profile
+  updateAdminProfile: async (name, email) => {
+    try {
+      const response = await API.put("/auth/update-profile", { name, email });
+      // Optionally update local storage userData
+      const storedData = localStorage.getItem("userData");
+      if (storedData) {
+        const userData = JSON.parse(storedData);
+        userData.name = response.data.admin.name;
+        userData.email = response.data.admin.email;
+        localStorage.setItem("userData", JSON.stringify(userData));
+      }
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || "Failed to update profile");
+    }
+  },
 
   // Reset Password
   resetPassword: async (token, newPassword, role) => {
@@ -112,10 +129,10 @@ const authUser = {
   // ✅ Delete Account
   deleteAccount: async () => {
     try {
-     
+
       const response = await API.delete("/auth/delete-account");
       // Clear local storage after deleting account
-     
+
       localStorage.removeItem("userToken");
       localStorage.removeItem("userData");
       localStorage.removeItem("userRole");

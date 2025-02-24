@@ -128,7 +128,23 @@ export const AuthProvider = ({ children }) => {
       return { success: false, message: error.message };
     }
   };
-
+  // ✅ Update Admin Profile Function
+  const updateAdminProfile = async (name, email) => {
+    try {
+      const data = await authUser.updateAdminProfile(name, email);
+      console.log("✅ Admin profile updated successfully");
+      // Update local state and localStorage with the updated admin info
+      const updatedUser = { ...user, name: data.admin.name, email: data.admin.email };
+      setUser(updatedUser);
+      localStorage.setItem("userData", JSON.stringify(updatedUser));
+      // Optionally refresh the profile
+      fetchProfile(token);
+      return { success: true, message: "Profile updated successfully", admin: data.admin };
+    } catch (error) {
+      console.error("❌ Error updating admin profile:", error.message);
+      return { success: false, message: error.message };
+    }
+  };
   // ✅ Delete Account Function
   const deleteAccount = async () => {
     try {
@@ -181,6 +197,7 @@ export const AuthProvider = ({ children }) => {
         googleLogin,
         logout,
         changePassword, // ✅ Added Change Password
+        updateAdminProfile, // <-- Added updateAdminProfile to context
         deleteAccount, // ✅ Added Delete Account
       }}
     >

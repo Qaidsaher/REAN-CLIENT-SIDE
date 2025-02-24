@@ -77,7 +77,7 @@ const Admins = () => {
         />
         <Table
           data={admins}
-          fields={["name", "email", "role"]}
+          fields={["name", "email"]}
           onCreate={handleCreate}
           onEdit={handleEdit}
           onDelete={handleDelete}
