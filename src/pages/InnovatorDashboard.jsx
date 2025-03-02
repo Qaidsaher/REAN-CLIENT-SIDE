@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import {
   FaLightbulb,
   FaChartLine,
@@ -9,6 +11,8 @@ import {
   FaFolderOpen,
   FaDollarSign,
   FaClock,
+
+  FaHourglassHalf
 } from "react-icons/fa";
 import {
   LineChart,
@@ -38,7 +42,7 @@ const StatCard = ({ icon, title, value, color }) => (
 const InnovatorDashboard = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const navigate = useNavigate();
   useEffect(() => {
     fetchStats();
   }, []);
@@ -47,7 +51,7 @@ const InnovatorDashboard = () => {
     try {
       const data = await getInnovatorStats();
       setStats(data);
-      
+
     } catch (error) {
       console.error("❌ Error fetching innovator stats:", error);
     } finally {
@@ -182,7 +186,7 @@ const InnovatorDashboard = () => {
           {/* ✅ Investment Requests */}
           <div className="bg-white p-6 mt-6 rounded-lg shadow-md">
             <h3 className="text-2xl font-bold text-gray-800 mb-4">
-              Investment Requests   
+              Investment Requests Pending
             </h3>
             {investmentRequests.length > 0 ? (
               <ul className="divide-y divide-gray-200">
@@ -191,7 +195,9 @@ const InnovatorDashboard = () => {
                     key={request._id}
                     className="py-4 flex justify-between items-center"
                   >
-                    <span className="text-gray-700 text-lg">
+                    <span className="text-gray-700 text-lg flex items-center gap-2">
+                    <FaDollarSign className="text-yellow-500 " />
+
                       <strong>
                         {request.investor?.firstName} {request.investor?.lastName}
                       </strong>{" "}
@@ -199,20 +205,10 @@ const InnovatorDashboard = () => {
                     </span>
                     <div className="flex space-x-2">
                       <button
-                        className="bg-green-500 text-white px-3 py-1 rounded-md"
-                        onClick={() =>
-                          handleStatusChange(request._id, "Approved")
-                        }
+                        className="border border-yellow-500 text-yellow-500 px-4 py-1 rounded transition hover:bg-yellow-500 hover:text-white flex items-center gap-2"
+                        onClick={() => navigate("/my-activity")}
                       >
-                        Accept
-                      </button>
-                      <button
-                        className="bg-red-500 text-white px-3 py-1 rounded-md"
-                        onClick={() =>
-                          handleStatusChange(request._id, "Rejected")
-                        }
-                      >
-                        Reject
+                        <FaHourglassHalf /> Show Pending detail
                       </button>
                     </div>
                   </li>
@@ -220,7 +216,7 @@ const InnovatorDashboard = () => {
               </ul>
             ) : (
               <p className="text-gray-500 text-center">
-                No investment requests.
+                No investment requests pending yet.
               </p>
             )}
           </div>

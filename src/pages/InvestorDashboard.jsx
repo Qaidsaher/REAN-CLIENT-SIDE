@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import {
   FaMoneyBillWave,
   FaClipboardList,
@@ -8,6 +10,8 @@ import {
   FaClock,
   FaCheckCircle,
   FaTimesCircle,
+  FaHourglassHalf,
+  FaDollarSign
 } from "react-icons/fa";
 import {
   LineChart,
@@ -50,7 +54,7 @@ const StatCard = ({ icon, title, value, color }) => (
 const InvestorDashboard = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const navigate = useNavigate();
   useEffect(() => {
     fetchInvestorStats();
   }, []);
@@ -174,44 +178,25 @@ const InvestorDashboard = () => {
           <h3 className="text-2xl font-bold text-gray-800 mb-4">
             Investment Requests
           </h3>
-          {stats.investmentRequests.map((req) => (
-            <motion.div
-              key={req._id}
-              whileHover={{ scale: 1.02 }}
-              className="flex justify-between items-center p-4 border-b transition-all"
+          {stats.investmentRequests.map((request) => (
+            <li
+              key={request._id}
+              className="py-4 flex justify-between items-center"
             >
-              <p className="text-gray-700">
-                <strong>{req.innovation?.name}</strong> - ${req.amount}
-              </p>
-              <div>
-                {req.status === "Pending" ? (
-                  <>
-                    <button
-                      className="bg-green-600 text-white px-4 py-1 rounded mr-2 hover:bg-green-700 transition"
-                      onClick={() => handleStatusChange(req._id, "Approved")}
-                    >
-                      Accept
-                    </button>
-                    <button
-                      className="bg-red-600 text-white px-4 py-1 rounded hover:bg-red-700 transition"
-                      onClick={() => handleStatusChange(req._id, "Rejected")}
-                    >
-                      Reject
-                    </button>
-                  </>
-                ) : (
-                  <span
-                    className={`px-3 py-1 rounded text-white ${
-                      req.status === "Approved"
-                        ? "bg-green-500"
-                        : "bg-red-500"
-                    }`}
-                  >
-                    {req.status}
-                  </span>
-                )}
-              </div>
-            </motion.div>
+              <span className="text-gray-700 text-lg flex items-center gap-2">
+                <FaDollarSign className="text-yellow-500" />
+                <strong>
+                  {request.innovation?.name} 
+                </strong>{" "}
+                requested ${request.amount}
+              </span>
+              <button
+                className="border border-yellow-500 text-yellow-500 px-4 py-1 rounded transition hover:bg-yellow-500 hover:text-white flex items-center gap-2"
+                onClick={() => navigate("/my-activity")}
+              >
+                <FaHourglassHalf /> Show Pending detail
+              </button>
+            </li>
           ))}
         </div>
       </div>

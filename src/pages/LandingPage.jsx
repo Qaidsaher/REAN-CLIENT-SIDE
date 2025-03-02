@@ -1,26 +1,3 @@
-// // src/pages/LandingPage.jsx
-// import React from "react";
-// import Hero from "../components/Hero";
-// import TargetedAudience from "../components/TargetedAudience";
-// import Areas from "../components/Areas";
-// import Stats from "../components/Stats";
-// import Contact from "../components/Contact";
-// import { About } from "../components/About";
-// import Investors from "../components/Investors";
-// import GuestLayout from "../layouts/GuestLayout";
-// const LandingPage = () => (
-//   <div className="min-h-screen">
-//     <GuestLayout>
-//       <Hero />
-//       <About />
-//       <TargetedAudience />
-//       <Investors />
-//       <Areas />
-//       <Stats />
-//       <Contact />
-//     </GuestLayout>
-//   </div>
-// );
 
 // export default LandingPage;
 import React from "react";

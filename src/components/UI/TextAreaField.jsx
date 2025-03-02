@@ -18,7 +18,7 @@ const TextAreaField = ({
         onChange={onChange}
         placeholder={placeholder}
         rows={rows}
-        className={`w-full border ${
+        className={`w-full border  focus:outline-none ${
           error ? "border-red-500" : "border-gray-300"
         } rounded-lg p-3 transition focus:ring-2 focus:ring-indigo-500`}
       />
