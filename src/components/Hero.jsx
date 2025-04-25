@@ -1,7 +1,7 @@
 import React from "react";
 import { FaLinkedin, FaInstagram, FaXTwitter } from "react-icons/fa6"; // React Icons for social media
 import { useTranslation } from "react-i18next";
-
+import hereImage from "../assets/images/hero.jpg"; 
 const Hero = () => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.language === 'ar';
@@ -61,7 +61,7 @@ const Hero = () => {
           <div className="relative">
             {/* ✅ Main Image */}
             <img
-              src="https://source.unsplash.com/600x400/?business,innovation"
+              src={hereImage}
               alt={t("hero.imageAlt")}
               className="rounded-xl shadow-2xl w-full max-w-md lg:max-w-lg"
             />
