@@ -24,13 +24,13 @@ const Hero = () => {
           {/* ✅ Call-to-Action Buttons */}
           <div className={`mt-6 flex flex-wrap  lg:justify-${isRtl ? "end" : "start"} gap-4`}>
             <a
-              href="#"
+              href="/join-by"
               className="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-lg transition-all hover:bg-indigo-700 hover:scale-105 shadow-md"
             >
               {t("hero.joinButton")}
             </a>
             <a
-              href="#"
+              href="/about-us"
               className="px-8 py-3 bg-transparent border border-indigo-600 text-indigo-600 font-semibold rounded-lg transition-all hover:bg-indigo-600 hover:text-white shadow-md"
             >
               {t("hero.learnMoreButton")}
@@ -70,7 +70,7 @@ const Hero = () => {
             <div className="absolute -bottom-6 -right-6 w-16 h-16 bg-indigo-400 rounded-full opacity-50"></div>
           </div>
         </div>
-
+ 
       </div>
     </section>
   );

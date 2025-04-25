@@ -143,13 +143,13 @@ export const About = () => {
 
           <div className="mt-6 flex flex-wrap gap-4">
             <a
-              href="/explore"
+              href="/about-us"
               className="px-6 py-3 text-white bg-indigo-600 hover:bg-indigo-700 transition-all rounded-lg font-semibold shadow-md"
             >
               {t("about.exploreButton")}
             </a>
             <a
-              href="/join"
+              href="/join-by"
               className="px-6 py-3 text-indigo-600 border border-indigo-600 hover:bg-indigo-600 hover:text-white transition-all rounded-lg font-semibold shadow-md"
             >
               {t("about.joinButton")}

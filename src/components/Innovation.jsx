@@ -156,7 +156,7 @@ const Innovation = () => {
                 </p>
                 <div className="mt-4 flex justify-between items-center">
                   <a
-                    href="#"
+                    href="/innovations"
                     className="px-5 py-2 bg-indigo-600 text-white font-medium rounded-lg transition-all hover:bg-indigo-700 hover:scale-105"
                   >
                     View Details

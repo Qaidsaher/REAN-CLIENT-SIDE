@@ -16,7 +16,7 @@ const JoinBy = () => {
   const handleAction = (provider) => {
     setLoading((prev) => ({ ...prev, [provider]: true }));
     setTimeout(() => {
-      navigate('/login')
+      navigate('/register')
       setLoading((prev) => ({ ...prev, [provider]: false }));
     }, 1000); // 300,000 ms = 5 minutes
 
