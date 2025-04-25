@@ -93,12 +93,13 @@ const Profile = () => {
 
   const handleChangePassword = async (oldPassword, newPassword) => {
     try {
-      const response = await changePassword({ oldPassword, newPassword });
+
+      const response = await changePassword(oldPassword, newPassword );
       if (response.success) {
         showMessage("Password changed successfully")
-        // alert("Password changed successfully.");
+        
       } else {
-        // alert("Failed to change password.");
+        showMessage("Error changing password::" + response.message, "error")
       }
     } catch (error) {
       console.error("Error changing password:", error);
@@ -114,6 +115,7 @@ const Profile = () => {
         // alert("Account deleted successfully.");
         window.location.href = "/login";
       } else {
+        showMessage("Error changing password::" + response.error, "error")
         // alert("Failed to delete account.");
       }
     } catch (error) {

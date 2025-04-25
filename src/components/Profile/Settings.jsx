@@ -18,14 +18,40 @@ const Settings = ({ changePassword, deleteAccount }) => {
   };
 
   // 🔹 Validate Password Change
+  // Regex for password validation
+  const lowercaseRegex = /(?=.*[a-z])/;
+  const uppercaseRegex = /(?=.*[A-Z])/;
+  const numberRegex = /(?=.*\d)/;
+  const specialCharRegex = /(?=.*[!@#$%^&*])/;
+  const minLength = 8;
+
+ 
+  // 🔹 Validate Password Change
   const validatePasswords = () => {
     const newErrors = {};
-    if (!passwordData.oldPassword)
+
+    if (!passwordData.oldPassword) {
       newErrors.oldPassword = "Old password is required.";
-    if (!passwordData.newPassword)
+    }
+
+    if (!passwordData.newPassword) {
       newErrors.newPassword = "New password is required.";
-    if (passwordData.newPassword !== passwordData.confirmPassword)
+    } else if (passwordData.newPassword.length < minLength) {
+      newErrors.newPassword = `Password must be at least ${minLength} characters long`;
+    } else if (!lowercaseRegex.test(passwordData.newPassword)) {
+      newErrors.newPassword = "Password must contain at least one lowercase letter";
+    } else if (!uppercaseRegex.test(passwordData.newPassword)) {
+      newErrors.newPassword = "Password must contain at least one uppercase letter";
+    } else if (!numberRegex.test(passwordData.newPassword)) {
+      newErrors.newPassword = "Password must contain at least one number";
+    } else if (!specialCharRegex.test(passwordData.newPassword)) {
+      newErrors.newPassword = "Password must contain at least one special character (!@#$%^&*)";
+    }
+
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match.";
+    }
+
     return newErrors;
   };
 
@@ -40,7 +66,8 @@ const Settings = ({ changePassword, deleteAccount }) => {
 
     setLoading(true);
     try {
-      await changePassword(passwordData);
+
+      await changePassword(passwordData.oldPassword, passwordData.newPassword);
      
       setPasswordData({
         oldPassword: "",
