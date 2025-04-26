@@ -37,7 +37,7 @@ const InvestorNavbar = () => {
           {/* ✅ Logo */}
           <div className="flex items-center">
             <NavLink to="/" className="text-2xl font-bold text-indigo-600">
-              Ream
+            REAN
             </NavLink>
           </div>
 
